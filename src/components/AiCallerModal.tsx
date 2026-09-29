@@ -1,48 +1,20 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Mic,
-  MicOff,
   PhoneCall,
   PhoneOff,
   Play,
   Pause,
   RefreshCw,
-  CheckCircle2,
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
-  Zap,
-  MessageSquare,
-  Database,
   Calendar,
   Building2,
-  Home,
-  Star,
-  ChevronRight,
-  Check,
   X,
-  Layers,
-  ExternalLink,
-  Globe,
-  UserCheck,
-  AlertCircle,
-  Smartphone,
-  Sun,
-  Moon,
-  Award,
-  Activity,
-  TrendingUp,
   Volume2,
   VolumeX,
-  Stethoscope,
   ChevronLeft,
-  Clock,
-  MapPin,
+  ChevronRight,
   Languages,
-  Compass,
-  Shirt,
-  Scissors
+  Shirt
 } from 'lucide-react';
 import { ThreeHolographicSphere } from './ThreeHolographicSphere';
 import { useTheme } from '../context/ThemeContext';
@@ -361,7 +333,7 @@ interface AiCallerModalProps {
 }
 
 export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose }) => {
-  const { isDark, toggleTheme } = useTheme();
+  const { isDark } = useTheme();
   const [scenarioKey, setScenarioKey] = useState<'sourcing' | 'logistics' | 'translation'>('sourcing');
   const [language, setLanguage] = useState<'hi' | 'en'>('en');
   const [stepIndex, setStepIndex] = useState(0);
@@ -411,12 +383,35 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
 
   const handleSelectScenario = (key: 'sourcing' | 'logistics' | 'translation') => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.cancel();
+      try { window.speechSynthesis.cancel(); } catch {}
     }
     setScenarioKey(key);
     setStepIndex(0);
     setIsPlaying(false);
   };
+
+  // Safe Cleanup on modal close or unmount
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        try { window.speechSynthesis.cancel(); } catch {}
+      }
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch {}
+      }
+      if (playbackTimerRef.current) {
+        clearTimeout(playbackTimerRef.current);
+      }
+    };
+  }, [isOpen, onClose]);
 
   // Speech synthesis for interactive playback
   const speakCurrentStep = useCallback((step: DemoStep, lang: 'hi' | 'en') => {
@@ -434,16 +429,16 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
       const isAgent = step.speakerType === 'agent';
 
       if (lang === 'hi') {
-        const hiVoice = voices.find(v => v.lang.startsWith('hi')) ||
+        const hiVoice = voices.find(v => v.lang && v.lang.startsWith('hi')) ||
           voices.find(v => v.lang === 'en-IN') ||
-          voices.find(v => v.name.includes('India') || v.name.includes('Hindi'));
+          voices.find(v => v.name && (v.name.includes('India') || v.name.includes('Hindi')));
         if (hiVoice) utter.voice = hiVoice;
         utter.lang = 'hi-IN';
         utter.rate = isAgent ? 1.0 : 0.95;
         utter.pitch = isAgent ? 1.05 : 0.95;
       } else {
         const enVoice = voices.find(v => v.lang === 'en-GB' || v.lang === 'en-IN') ||
-          voices.find(v => v.lang.startsWith('en'));
+          voices.find(v => v.lang && v.lang.startsWith('en'));
         if (enVoice) utter.voice = enVoice;
         utter.lang = 'en-US';
         utter.rate = 1.0;
@@ -476,10 +471,12 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
 
   // Simulation play loop
   useEffect(() => {
+    if (!isOpen) return;
+
     if (!isPlaying) {
       if (playbackTimerRef.current) clearTimeout(playbackTimerRef.current);
       if (typeof window !== 'undefined' && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
+        try { window.speechSynthesis.cancel(); } catch {}
       }
       return;
     }
@@ -504,7 +501,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
       clearTimeout(safetyTimer);
       if (playbackTimerRef.current) clearTimeout(playbackTimerRef.current);
     };
-  }, [isPlaying, stepIndex, language, scenarioKey, isAudioMuted, currentStep, speakCurrentStep, steps.length]);
+  }, [isOpen, isPlaying, stepIndex, language, scenarioKey, isAudioMuted, currentStep, speakCurrentStep, steps.length]);
 
   // Live Speech Recognition
   const handleToggleLiveCall = () => {
@@ -516,76 +513,87 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
         try { recognitionRef.current.stop(); } catch {}
       }
       if (typeof window !== 'undefined' && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
+        try { window.speechSynthesis.cancel(); } catch {}
       }
     } else {
       setIsCalling(true);
       setUserTranscript('Listening for your voice... speak now (e.g., "Find organic cotton suppliers in Hall 2")');
       setAgentResponse('IIGF Voice Neural Core Connected · Ready for your sourcing request');
 
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = language === 'hi' ? 'hi-IN' : 'en-US';
+      try {
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        if (SpeechRecognition) {
+          const recognition = new SpeechRecognition();
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.lang = language === 'hi' ? 'hi-IN' : 'en-US';
 
-        recognition.onstart = () => {
-          setIsUserSpeakingLive(true);
-        };
+          recognition.onstart = () => {
+            setIsUserSpeakingLive(true);
+          };
 
-        recognition.onresult = (event: any) => {
-          const current = event.resultIndex;
-          const transcript = event.results[current][0].transcript;
-          setUserTranscript(transcript);
+          recognition.onresult = (event: any) => {
+            const current = event.resultIndex;
+            const transcript = event.results[current][0].transcript;
+            setUserTranscript(transcript);
 
-          if (event.results[current].isFinal) {
+            if (event.results[current].isFinal) {
+              setIsUserSpeakingLive(false);
+              setIsAgentSpeakingLive(true);
+
+              let reply = "I have located 3 certified Indian exhibitors in Bharat Mandapam Hall 2 matching your requirements. ABC Textiles at Stall B-17 has GOTS organic cotton samples ready.";
+              if (transcript.toLowerCase().includes('hotel') || transcript.toLowerCase().includes('airport')) {
+                reply = "The official IIGF VIP limousine is waiting at Terminal 3 Gate 5, and your Taj Mahal Hotel check-in is confirmed.";
+              } else if (transcript.toLowerCase().includes('badge') || transcript.toLowerCase().includes('gate')) {
+                reply = "Your Fast-Track Overseas Buyer RFID badge is ready for collection at Gate 4 VIP lounge.";
+              }
+
+              setAgentResponse(reply);
+
+              if (typeof window !== 'undefined' && window.speechSynthesis && !isAudioMuted) {
+                try {
+                  const utter = new SpeechSynthesisUtterance(reply);
+                  utter.lang = language === 'hi' ? 'hi-IN' : 'en-US';
+                  utter.onend = () => {
+                    setIsAgentSpeakingLive(false);
+                  };
+                  window.speechSynthesis.speak(utter);
+                } catch {
+                  setTimeout(() => setIsAgentSpeakingLive(false), 3000);
+                }
+              } else {
+                setTimeout(() => setIsAgentSpeakingLive(false), 3000);
+              }
+            }
+          };
+
+          recognition.onerror = () => {
+            setIsUserSpeakingLive(false);
+          };
+
+          recognitionRef.current = recognition;
+          recognition.start();
+        } else {
+          setUserTranscript("Microphone listening: 'Looking for organic cotton single jersey knits MOQ 300'");
+          setTimeout(() => {
             setIsUserSpeakingLive(false);
             setIsAgentSpeakingLive(true);
-
-            // Generate contextual response based on buyer query
-            let reply = "I have located 3 certified Indian exhibitors in Bharat Mandapam Hall 2 matching your requirements. ABC Textiles at Stall B-17 has GOTS organic cotton samples ready.";
-            if (transcript.toLowerCase().includes('hotel') || transcript.toLowerCase().includes('airport')) {
-              reply = "The official IIGF VIP limousine is waiting at Terminal 3 Gate 5, and your Taj Mahal Hotel check-in is confirmed.";
-            } else if (transcript.toLowerCase().includes('badge') || transcript.toLowerCase().includes('gate')) {
-              reply = "Your Fast-Track Overseas Buyer RFID badge is ready for collection at Gate 4 VIP lounge.";
-            }
-
+            const reply = "Matched with ABC Textiles (Tirupur Cluster, Stall B-17). Booking your 11:30 AM appointment now.";
             setAgentResponse(reply);
-
             if (typeof window !== 'undefined' && window.speechSynthesis && !isAudioMuted) {
-              const utter = new SpeechSynthesisUtterance(reply);
-              utter.lang = language === 'hi' ? 'hi-IN' : 'en-US';
-              utter.onend = () => {
-                setIsAgentSpeakingLive(false);
-              };
-              window.speechSynthesis.speak(utter);
-            } else {
-              setTimeout(() => setIsAgentSpeakingLive(false), 3000);
+              try {
+                const utter = new SpeechSynthesisUtterance(reply);
+                utter.onend = () => setIsAgentSpeakingLive(false);
+                window.speechSynthesis.speak(utter);
+              } catch {
+                setTimeout(() => setIsAgentSpeakingLive(false), 3000);
+              }
             }
-          }
-        };
-
-        recognition.onerror = () => {
-          setIsUserSpeakingLive(false);
-        };
-
-        recognitionRef.current = recognition;
-        try { recognition.start(); } catch {}
-      } else {
-        // Fallback for browsers without Web Speech Recognition
-        setUserTranscript("Microphone simulation: 'Looking for organic cotton single jersey knits MOQ 300'");
-        setTimeout(() => {
-          setIsUserSpeakingLive(false);
-          setIsAgentSpeakingLive(true);
-          const reply = "Matched with ABC Textiles (Tirupur Cluster, Stall B-17). Booking your 11:30 AM appointment now.";
-          setAgentResponse(reply);
-          if (typeof window !== 'undefined' && window.speechSynthesis && !isAudioMuted) {
-            const utter = new SpeechSynthesisUtterance(reply);
-            utter.onend = () => setIsAgentSpeakingLive(false);
-            window.speechSynthesis.speak(utter);
-          }
-        }, 2000);
+          }, 2000);
+        }
+      } catch (err) {
+        console.warn('Speech recognition fallback:', err);
+        setUserTranscript("Connecting to AI Voice Core...");
       }
     }
   };
@@ -632,34 +640,36 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
         style={{
           position: 'relative',
           zIndex: 20,
-          padding: '16px 36px',
+          padding: '12px 24px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           backdropFilter: 'blur(16px)',
-          background: 'rgba(7, 9, 13, 0.65)',
+          background: 'rgba(7, 9, 13, 0.75)',
+          gap: 12,
+          flexWrap: 'wrap'
         }}
       >
         {/* Left: IIGF Brand Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <img
             src="https://www.indiaapparelfair.com/75th/img/logo.png"
             alt="75th IIGF"
-            style={{ height: 28, width: 'auto', objectFit: 'contain', filter: 'brightness(1.1)' }}
+            style={{ height: 26, width: 'auto', objectFit: 'contain', filter: 'brightness(1.1)' }}
           />
-          <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.15)', paddingLeft: 12 }}>
+          <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.15)', paddingLeft: 10 }}>
             <span style={{ color: '#E6005C', fontSize: 11, fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase', display: 'block' }}>
               IIGF AI VOICE AGENT
             </span>
             <span style={{ color: '#94A3B8', fontSize: 9, fontWeight: 600 }}>
-              Live Autonomous Sourcing & Support Hub
+              Live Sourcing & Support
             </span>
           </div>
         </div>
 
         {/* Center: Scenario Switcher + Language Switcher + Mode */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           {/* Scenarios */}
           <div
             style={{
@@ -673,7 +683,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
             {[
               { id: 'sourcing', label: 'B2B Sourcing', icon: Shirt },
               { id: 'logistics', label: 'VIP Logistics', icon: Building2 },
-              { id: 'translation', label: 'Multilingual Weaver', icon: Languages },
+              { id: 'translation', label: 'Weaver Translation', icon: Languages },
             ].map(tab => {
               const Icon = tab.icon;
               const isSelected = scenarioKey === tab.id;
@@ -684,21 +694,20 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 6,
-                    padding: '6px 12px',
+                    gap: 5,
+                    padding: '5px 10px',
                     borderRadius: 8,
                     border: 'none',
                     cursor: 'pointer',
                     fontSize: 11,
                     fontWeight: 600,
-                    letterSpacing: '0.03em',
                     background: isSelected ? '#DFB74A' : 'transparent',
                     color: isSelected ? '#07090D' : '#94A3B8',
                     transition: 'all 0.2s ease',
                   }}
                 >
                   <Icon size={12} />
-                  {tab.label}
+                  <span>{tab.label}</span>
                 </button>
               );
             })}
@@ -721,7 +730,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                 if (isPlaying) speakCurrentStep(currentStep, 'en');
               }}
               style={{
-                padding: '6px 10px',
+                padding: '5px 8px',
                 borderRadius: 8,
                 border: 'none',
                 cursor: 'pointer',
@@ -740,7 +749,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                 if (isPlaying) speakCurrentStep(currentStep, 'hi');
               }}
               style={{
-                padding: '6px 10px',
+                padding: '5px 8px',
                 borderRadius: 8,
                 border: 'none',
                 cursor: 'pointer',
@@ -771,7 +780,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                 setActiveMode('simulation');
               }}
               style={{
-                padding: '6px 12px',
+                padding: '5px 10px',
                 borderRadius: 8,
                 border: 'none',
                 cursor: 'pointer',
@@ -781,16 +790,18 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                 color: activeMode === 'simulation' ? '#DFB74A' : '#64748B',
               }}
             >
-              Interactive Story
+              Story Demo
             </button>
             <button
               onClick={() => {
                 setIsPlaying(false);
-                window.speechSynthesis?.cancel();
+                if (typeof window !== 'undefined' && window.speechSynthesis) {
+                  try { window.speechSynthesis.cancel(); } catch {}
+                }
                 setActiveMode('live-voice');
               }}
               style={{
-                padding: '6px 12px',
+                padding: '5px 10px',
                 borderRadius: 8,
                 border: 'none',
                 cursor: 'pointer',
@@ -800,39 +811,13 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                 color: activeMode === 'live-voice' ? '#00D4FF' : '#64748B',
               }}
             >
-              Live Mic Call
+              Live Mic
             </button>
           </div>
         </div>
 
         {/* Right Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  background: currentStep.speakerType === 'user' ? '#DFB74A' : '#00D4FF',
-                  boxShadow: `0 0 10px ${currentStep.speakerType === 'user' ? '#DFB74A' : '#00D4FF'}`,
-                  display: 'inline-block',
-                }}
-              />
-              <span
-                style={{
-                  color: '#E2E8F0',
-                  fontSize: 11,
-                  fontWeight: 800,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {activeStatusBadge}
-              </span>
-            </div>
-          </div>
-
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button
             onClick={() => setIsAudioMuted(!isAudioMuted)}
             title={isAudioMuted ? 'Unmute Audio' : 'Mute Audio'}
@@ -851,7 +836,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
           <button
             onClick={() => {
               if (typeof window !== 'undefined' && window.speechSynthesis) {
-                window.speechSynthesis.cancel();
+                try { window.speechSynthesis.cancel(); } catch {}
               }
               onClose();
             }}
@@ -885,7 +870,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          padding: '0 32px',
+          padding: '0 20px',
         }}
       >
         <div
@@ -916,8 +901,10 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
             <div
               style={{
                 position: 'relative',
-                width: 380,
-                height: 380,
+                width: 320,
+                height: 320,
+                maxWidth: '38vw',
+                maxHeight: '38vw',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -930,9 +917,9 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
               <div
                 style={{
                   color: '#DFB74A',
-                  fontSize: 13.5,
+                  fontSize: 13,
                   fontWeight: 900,
-                  letterSpacing: '0.2em',
+                  letterSpacing: '0.15em',
                   textTransform: 'uppercase',
                   textShadow: '0 0 12px rgba(223, 183, 74, 0.6)',
                 }}
@@ -942,11 +929,11 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
               <div
                 style={{
                   color: '#94A3B8',
-                  fontSize: 11,
+                  fontSize: 10,
                   fontWeight: 700,
-                  letterSpacing: '0.18em',
+                  letterSpacing: '0.15em',
                   textTransform: 'uppercase',
-                  marginTop: 3,
+                  marginTop: 2,
                 }}
               >
                 {isUserSpeaking ? (language === 'hi' ? 'बोल रहे हैं...' : 'SPEAKING...') : (language === 'hi' ? 'कॉलिंग इन' : 'CALLING IN')}
@@ -1041,8 +1028,10 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
             <div
               style={{
                 position: 'relative',
-                width: 380,
-                height: 380,
+                width: 320,
+                height: 320,
+                maxWidth: '38vw',
+                maxHeight: '38vw',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -1055,9 +1044,9 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
               <div
                 style={{
                   color: '#38bdf8',
-                  fontSize: 13.5,
+                  fontSize: 13,
                   fontWeight: 900,
-                  letterSpacing: '0.2em',
+                  letterSpacing: '0.15em',
                   textTransform: 'uppercase',
                   textShadow: '0 0 12px rgba(56, 189, 248, 0.7)',
                 }}
@@ -1067,11 +1056,11 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
               <div
                 style={{
                   color: '#94A3B8',
-                  fontSize: 11,
+                  fontSize: 10,
                   fontWeight: 700,
-                  letterSpacing: '0.18em',
+                  letterSpacing: '0.15em',
                   textTransform: 'uppercase',
-                  marginTop: 3,
+                  marginTop: 2,
                 }}
               >
                 {isAgentSpeaking ? (language === 'hi' ? 'जवाब दे रही हैं...' : 'ANSWERING...') : (language === 'hi' ? 'कनेक्टेड' : 'CONNECTED')}
@@ -1082,12 +1071,13 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
 
         {/* Right Floating Sidebar: Real-Time Tool Calling Info Card */}
         <div
+          className="hidden md:block"
           style={{
             position: 'absolute',
-            right: 36,
+            right: 28,
             top: '50%',
             transform: 'translateY(-50%)',
-            width: 330,
+            width: 310,
             zIndex: 20,
             pointerEvents: 'auto',
           }}
@@ -1096,21 +1086,21 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
             {currentStep.toolAction && (
               <motion.div
                 key={`${scenarioKey}-${stepIndex}-${currentStep.toolAction.title}`}
-                initial={{ opacity: 0, x: 30, scale: 0.95 }}
+                initial={{ opacity: 0, x: 20, scale: 0.95 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: 20, scale: 0.98 }}
-                transition={{ duration: 0.35, ease: 'easeOut' }}
+                exit={{ opacity: 0, x: 15, scale: 0.98 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
                 style={{
                   background: 'rgba(10, 17, 26, 0.92)',
                   border: '1px solid rgba(0, 212, 255, 0.25)',
                   boxShadow: '0 16px 48px rgba(0, 0, 0, 0.7), 0 0 24px rgba(0, 212, 255, 0.12)',
                   borderRadius: 14,
-                  padding: '18px 20px',
+                  padding: '16px 18px',
                   backdropFilter: 'blur(24px)',
                 }}
               >
                 {/* Tool Header */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <Calendar size={13} color="#38BDF8" />
                     <span style={{ color: '#94A3B8', fontSize: 11, fontWeight: 700 }}>
@@ -1124,11 +1114,11 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
 
                 {/* Stall / Contact Header */}
                 {currentStep.toolAction.doctorName && (
-                  <div style={{ marginBottom: 12 }}>
-                    <div style={{ color: '#F8FAFC', fontSize: 13, fontWeight: 800, letterSpacing: '0.02em' }}>
+                  <div style={{ marginBottom: 10 }}>
+                    <div style={{ color: '#F8FAFC', fontSize: 12, fontWeight: 800 }}>
                       {currentStep.toolAction.doctorName}
                     </div>
-                    <div style={{ color: '#38BDF8', fontSize: 9, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 1 }}>
+                    <div style={{ color: '#38BDF8', fontSize: 9, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: 1 }}>
                       {currentStep.toolAction.specialty}
                     </div>
                   </div>
@@ -1136,7 +1126,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
 
                 {/* Calendar Slots */}
                 {currentStep.toolAction.slots && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                     {currentStep.toolAction.slots.map((slot, sIdx) => {
                       const isSelected = slot.status === 'selected';
                       const isBooked = slot.status === 'booked';
@@ -1147,8 +1137,8 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            padding: '8px 12px',
-                            borderRadius: 8,
+                            padding: '6px 10px',
+                            borderRadius: 6,
                             background: isBooked
                               ? 'rgba(0, 150, 120, 0.25)'
                               : isSelected
@@ -1159,18 +1149,17 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                               : isSelected
                                 ? '1px solid rgba(223, 183, 74, 0.6)'
                                 : '1px solid rgba(255, 255, 255, 0.05)',
-                            transition: 'all 0.3s ease',
+                            transition: 'all 0.2s ease',
                           }}
                         >
-                          <span style={{ color: isSelected || isBooked ? '#FFFFFF' : '#CBD5E1', fontSize: 11, fontWeight: 700 }}>
-                            <span style={{ color: '#38BDF8', marginRight: 6 }}>{slot.time}</span> {slot.label}
+                          <span style={{ color: isSelected || isBooked ? '#FFFFFF' : '#CBD5E1', fontSize: 10, fontWeight: 700 }}>
+                            <span style={{ color: '#38BDF8', marginRight: 4 }}>{slot.time}</span> {slot.label}
                           </span>
                           <span
                             style={{
                               color: isBooked ? '#00E5A3' : isSelected ? '#DFB74A' : '#64748B',
-                              fontSize: 9,
+                              fontSize: 8,
                               fontWeight: 800,
-                              letterSpacing: '0.06em',
                             }}
                           >
                             {slot.badge || 'FREE'}
@@ -1183,10 +1172,10 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
 
                 {/* CRM Fields */}
                 {currentStep.toolAction.crmFields && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                     {currentStep.toolAction.crmFields.map((field, fIdx) => (
-                      <div key={fIdx} style={{ fontSize: 11 }}>
-                        <div style={{ color: '#64748B', fontSize: 9, fontWeight: 700, textTransform: 'uppercase', marginBottom: 2 }}>
+                      <div key={fIdx} style={{ fontSize: 10 }}>
+                        <div style={{ color: '#64748B', fontSize: 8.5, fontWeight: 700, textTransform: 'uppercase', marginBottom: 1 }}>
                           {field.label}
                         </div>
                         <div style={{ color: field.highlight ? '#DFB74A' : '#E2E8F0', fontWeight: field.highlight ? 700 : 600 }}>
@@ -1199,19 +1188,19 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
 
                 {/* WhatsApp Message */}
                 {currentStep.toolAction.whatsappMessage && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    <div style={{ color: '#64748B', fontSize: 9, fontWeight: 700 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                    <div style={{ color: '#64748B', fontSize: 8.5, fontWeight: 700 }}>
                       To: {currentStep.toolAction.whatsappMessage.to}
                     </div>
                     <div
                       style={{
                         background: 'rgba(0, 150, 120, 0.15)',
                         borderLeft: '2px solid #00E5A3',
-                        padding: '8px 10px',
+                        padding: '6px 8px',
                         borderRadius: 4,
                         color: '#E2E8F0',
-                        fontSize: 10,
-                        lineHeight: 1.4,
+                        fontSize: 9.5,
+                        lineHeight: 1.35,
                       }}
                     >
                       {currentStep.toolAction.whatsappMessage.text}
@@ -1234,23 +1223,23 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
         style={{
           position: 'relative',
           zIndex: 20,
-          padding: '20px 40px 28px',
-          background: 'linear-gradient(180deg, transparent 0%, rgba(7, 9, 13, 0.7) 100%)',
+          padding: '16px 24px 24px',
+          background: 'linear-gradient(180deg, transparent 0%, rgba(7, 9, 13, 0.8) 100%)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 14,
+          gap: 10,
         }}
       >
-        <div style={{ maxWidth: 900, margin: '0 auto', width: '100%' }}>
+        <div style={{ maxWidth: 860, margin: '0 auto', width: '100%' }}>
           {/* Active Speaker Label */}
           <div
             style={{
               color: currentStep.speakerType === 'user' ? '#DFB74A' : '#00D4FF',
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: 900,
-              letterSpacing: '0.2em',
+              letterSpacing: '0.18em',
               textTransform: 'uppercase',
-              marginBottom: 8,
+              marginBottom: 6,
             }}
           >
             {activeMode === 'live-voice' ? 'LIVE VOICE STREAM' : activeSpeakerLabel}
@@ -1260,17 +1249,17 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
           <AnimatePresence mode="wait">
             <motion.div
               key={activeMode === 'live-voice' ? `${userTranscript}-${agentResponse}` : `${scenarioKey}-${stepIndex}-${language}`}
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.35 }}
+              transition={{ duration: 0.25 }}
             >
               <div
                 style={{
                   color: '#FFFFFF',
-                  fontSize: 21,
+                  fontSize: 18,
                   fontWeight: 500,
-                  lineHeight: 1.45,
+                  lineHeight: 1.4,
                 }}
               >
                 {activeMode === 'live-voice' ? (isUserSpeakingLive ? userTranscript : agentResponse || userTranscript) : activeMainText}
@@ -1280,10 +1269,10 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
               <div
                 style={{
                   color: '#94A3B8',
-                  fontSize: 13,
+                  fontSize: 12,
                   fontStyle: 'italic',
-                  marginTop: 6,
-                  lineHeight: 1.4,
+                  marginTop: 4,
+                  lineHeight: 1.35,
                 }}
               >
                 {activeMode === 'live-voice' ? 'AI Voice Neural Engine · Auto-translating live speech' : activeTranslationText}
@@ -1298,27 +1287,30 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            maxWidth: 900,
+            maxWidth: 860,
             margin: '0 auto',
             width: '100%',
-            paddingTop: 6,
+            paddingTop: 4,
             opacity: isFooterHovered ? 1 : 0.85,
-            transform: 'translateY(0)',
-            transition: 'opacity 0.3s ease',
+            transition: 'opacity 0.2s ease',
+            flexWrap: 'wrap',
+            gap: 8,
           }}
         >
           {/* Step Pills */}
-          <div style={{ display: 'flex', gap: 6 }}>
+          <div style={{ display: 'flex', gap: 5 }}>
             {steps.map((s, idx) => (
               <button
                 key={s.step}
                 onClick={() => {
                   setStepIndex(idx);
                   setIsPlaying(false);
-                  window.speechSynthesis?.cancel();
+                  if (typeof window !== 'undefined' && window.speechSynthesis) {
+                    try { window.speechSynthesis.cancel(); } catch {}
+                  }
                 }}
                 style={{
-                  width: idx === stepIndex ? 36 : 18,
+                  width: idx === stepIndex ? 32 : 16,
                   height: 4,
                   borderRadius: 2,
                   border: 'none',
@@ -1328,7 +1320,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                     : idx < stepIndex
                       ? 'rgba(223, 183, 74, 0.4)'
                       : 'rgba(255, 255, 255, 0.15)',
-                  transition: 'all 0.3s ease',
+                  transition: 'all 0.2s ease',
                 }}
               />
             ))}
@@ -1336,7 +1328,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
 
           {/* Control Buttons */}
           {activeMode === 'simulation' ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <button
                 onClick={() => {
                   if (stepIndex > 0) {
@@ -1349,12 +1341,12 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: 8,
-                  padding: '6px 10px',
+                  padding: '5px 8px',
                   color: stepIndex === 0 ? '#64748B' : '#CBD5E1',
                   cursor: stepIndex === 0 ? 'not-allowed' : 'pointer',
                 }}
               >
-                <ChevronLeft size={14} />
+                <ChevronLeft size={13} />
               </button>
 
               <button
@@ -1369,18 +1361,17 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   color: '#07090D',
                   border: 'none',
                   borderRadius: 8,
-                  padding: '8px 18px',
+                  padding: '6px 14px',
                   cursor: 'pointer',
                   fontWeight: 900,
                   fontSize: 11,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 6,
-                  letterSpacing: '0.08em',
-                  boxShadow: '0 0 20px rgba(223, 183, 74, 0.3)',
+                  gap: 5,
+                  boxShadow: '0 0 15px rgba(223, 183, 74, 0.3)',
                 }}
               >
-                {isPlaying ? <><Pause size={13} /> PAUSE</> : <><Play size={13} /> PLAY DEMO</>}
+                {isPlaying ? <><Pause size={12} /> PAUSE</> : <><Play size={12} /> PLAY DEMO</>}
               </button>
 
               <button
@@ -1395,17 +1386,19 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: 8,
-                  padding: '6px 10px',
+                  padding: '5px 8px',
                   color: stepIndex === steps.length - 1 ? '#64748B' : '#CBD5E1',
                   cursor: stepIndex === steps.length - 1 ? 'not-allowed' : 'pointer',
                 }}
               >
-                <ChevronRight size={14} />
+                <ChevronRight size={13} />
               </button>
 
               <button
                 onClick={() => {
-                  window.speechSynthesis?.cancel();
+                  if (typeof window !== 'undefined' && window.speechSynthesis) {
+                    try { window.speechSynthesis.cancel(); } catch {}
+                  }
                   setStepIndex(0);
                   setIsPlaying(true);
                 }}
@@ -1414,19 +1407,19 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   border: 'none',
                   color: '#94A3B8',
                   cursor: 'pointer',
-                  fontSize: 11,
+                  fontSize: 10,
                   fontWeight: 600,
                   display: 'flex',
                   alignItems: 'center',
                   gap: 4,
-                  marginLeft: 8,
+                  marginLeft: 4,
                 }}
               >
-                <RefreshCw size={12} /> Restart
+                <RefreshCw size={11} /> Restart
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <button
                 onClick={handleToggleLiveCall}
                 style={{
@@ -1434,22 +1427,21 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   color: '#07090D',
                   border: 'none',
                   borderRadius: 8,
-                  padding: '8px 20px',
+                  padding: '6px 16px',
                   cursor: 'pointer',
                   fontWeight: 900,
                   fontSize: 11,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 8,
-                  letterSpacing: '0.08em',
-                  boxShadow: `0 0 20px ${isCalling ? 'rgba(239, 68, 68, 0.4)' : 'rgba(0, 212, 255, 0.4)'}`,
+                  gap: 6,
+                  boxShadow: `0 0 15px ${isCalling ? 'rgba(239, 68, 68, 0.4)' : 'rgba(0, 212, 255, 0.4)'}`,
                 }}
               >
-                {isCalling ? <><PhoneOff size={14} /> END CALL</> : <><PhoneCall size={14} /> SPEAK WITH AI AGENT</>}
+                {isCalling ? <><PhoneOff size={13} /> END CALL</> : <><PhoneCall size={13} /> SPEAK WITH AI AGENT</>}
               </button>
               {isCalling && (
-                <span style={{ color: '#00E5A3', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
-                  ● Live Mic Audio Connected
+                <span style={{ color: '#00E5A3', fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  ● Audio Connected
                 </span>
               )}
             </div>
