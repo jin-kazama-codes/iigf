@@ -18,6 +18,7 @@ import { BuyerRegistrationModal } from './components/BuyerRegistrationModal';
 import { GuidedTourModal } from './components/GuidedTourModal';
 import { FloatingChatWidget } from './components/FloatingChatWidget';
 import { BuyerTripPlannerView } from './components/BuyerTripPlannerView';
+import { ThemeProvider } from './context/ThemeContext';
 import { 
   DEMO_EXHIBITORS, 
   DEMO_BUYER_DEFAULT, 
@@ -113,8 +114,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800 antialiased selection:bg-[#E6005C]/20 selection:text-[#C2004D]">
-      {/* Header with Top Bar Contract */}
+    <ThemeProvider>
+      <div className="min-h-screen bg-slate-50 dark:bg-[#050811] dark:dark-cyber-grid flex flex-col font-sans text-slate-800 dark:text-slate-100 antialiased selection:bg-[#E6005C]/20 selection:text-[#C2004D] transition-colors duration-300">
+        {/* Header with Top Bar Contract */}
       <Header
         currentTab={currentTab}
         onSelectTab={(tab) => {
@@ -392,6 +394,7 @@ export default function App() {
         onBookMeeting={handleOpenBookMeeting}
         onOpenMeetingCopilot={handleOpenMeetingCopilot}
       />
-    </div>
+      </div>
+    </ThemeProvider>
   );
 }

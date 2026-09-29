@@ -713,28 +713,28 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
   const getCategoryBadgeClass = (category: string) => {
     switch (category) {
       case 'meeting':
-        return 'bg-pink-100 text-[#E6005C] border-pink-200';
+        return 'bg-pink-100 dark:bg-pink-950/60 text-[#E6005C] dark:text-pink-300 border-pink-200 dark:border-pink-800';
       case 'flight':
-        return 'bg-blue-100 text-blue-700 border-blue-200';
+        return 'bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800';
       case 'hotel':
-        return 'bg-purple-100 text-purple-700 border-purple-200';
+        return 'bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800';
       case 'fair':
-        return 'bg-amber-100 text-amber-800 border-amber-200';
+        return 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800';
       case 'culinary':
-        return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+        return 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800';
       case 'culture':
-        return 'bg-indigo-100 text-indigo-800 border-indigo-200';
+        return 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800';
       default:
-        return 'bg-slate-100 text-slate-700 border-slate-200';
+        return 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Top Hero Banner */}
-      <div className="bg-gradient-to-r from-[#DE0057] via-[#E6005C] to-[#C2004D] text-white rounded-3xl p-8 sm:p-10 shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-[#DE0057] via-[#E6005C] to-[#C2004D] dark:from-[#99003B] dark:via-[#B30047] dark:to-[#6B002B] text-white rounded-3xl p-8 sm:p-10 shadow-lg relative overflow-hidden dark:shadow-[0_0_30px_rgba(230,0,92,0.25)]">
         <div className="max-w-3xl space-y-3 relative z-10">
-          <div className="flex items-center gap-2 text-xs font-bold text-amber-300 uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs font-bold text-amber-300 dark:text-cyan-300 uppercase tracking-wider">
             <Compass className="w-4 h-4" />
             <span>Autonomous Trade & Travel Concierge · 75th IIGF</span>
           </div>
@@ -746,15 +746,15 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
           </p>
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-xs rounded-full text-xs font-bold text-white border border-white/30 flex items-center gap-1.5">
-              <Car className="w-3.5 h-3.5 text-amber-300" />
+            <span className="px-3 py-1 bg-white/20 dark:bg-black/30 backdrop-blur-xs rounded-full text-xs font-bold text-white border border-white/30 dark:border-white/10 flex items-center gap-1.5">
+              <Car className="w-3.5 h-3.5 text-amber-300 dark:text-cyan-300" />
               Airport & Hotel Shuttles Included
             </span>
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-xs rounded-full text-xs font-bold text-white border border-white/30 flex items-center gap-1.5">
-              <Route className="w-3.5 h-3.5 text-amber-300" />
+            <span className="px-3 py-1 bg-white/20 dark:bg-black/30 backdrop-blur-xs rounded-full text-xs font-bold text-white border border-white/30 dark:border-white/10 flex items-center gap-1.5">
+              <Route className="w-3.5 h-3.5 text-amber-300 dark:text-amber-400" />
               Live Plotted Route Polylines
             </span>
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-xs rounded-full text-xs font-bold text-white border border-white/30 flex items-center gap-1.5">
+            <span className="px-3 py-1 bg-white/20 dark:bg-black/30 backdrop-blur-xs rounded-full text-xs font-bold text-white border border-white/30 dark:border-white/10 flex items-center gap-1.5">
               <Star className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
               Google Business Profiles & Ratings
             </span>
@@ -763,21 +763,21 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
       </div>
 
       {/* Control Customizer & View Switcher */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4 dark:shadow-[0_0_20px_rgba(0,0,0,0.4)]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#E6005C]" />
-            <h3 className="text-sm font-black text-slate-900 uppercase">
+            <Sparkles className="w-4 h-4 text-[#E6005C] dark:text-pink-400" />
+            <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase">
               Buyer Schedule Parameters & Sourcing Focus
             </h3>
           </div>
 
           {/* View Mode Switcher */}
-          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold">
             <button
               onClick={() => setViewMode('split')}
               className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${
-                viewMode === 'split' ? 'bg-[#E6005C] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                viewMode === 'split' ? 'bg-[#E6005C] text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -786,7 +786,7 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
             <button
               onClick={() => setViewMode('list')}
               className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${
-                viewMode === 'list' ? 'bg-[#E6005C] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                viewMode === 'list' ? 'bg-[#E6005C] text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <span>List View</span>
@@ -794,7 +794,7 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
             <button
               onClick={() => setViewMode('map')}
               className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${
-                viewMode === 'map' ? 'bg-[#E6005C] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                viewMode === 'map' ? 'bg-[#E6005C] text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <Navigation className="w-3.5 h-3.5" />
@@ -805,52 +805,52 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
           <div>
-            <label className="font-bold text-slate-600 block mb-1">Buyer Profile:</label>
+            <label className="font-bold text-slate-600 dark:text-slate-400 block mb-1">Buyer Profile:</label>
             <input
               type="text"
               value={buyerName}
               onChange={(e) => setBuyerName(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-bold text-slate-900 focus:outline-none focus:border-[#E6005C]"
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#E6005C] dark:focus:border-pink-500"
             />
-            <span className="text-[11px] text-slate-500 mt-0.5 block">{buyerCompany}</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 block">{buyerCompany}</span>
           </div>
 
           <div>
-            <label className="font-bold text-slate-600 block mb-1">Preferred Hotel Hub:</label>
+            <label className="font-bold text-slate-600 dark:text-slate-400 block mb-1">Preferred Hotel Hub:</label>
             <select
               value={hotelChoice}
               onChange={(e) => setHotelChoice(e.target.value as any)}
-              className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-bold text-slate-900 focus:outline-none focus:border-[#E6005C]"
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#E6005C] dark:focus:border-pink-500"
             >
               <option value="central">Central Delhi — The Taj Mahal Hotel (4.8 ★ · 10 mins)</option>
               <option value="aerocity">Aerocity — JW Marriott / Pullman (4.7 ★ · 25 mins)</option>
               <option value="gurugram">Gurugram — The Oberoi / Leela (4.8 ★ · 35 mins)</option>
             </select>
-            <span className="text-[11px] text-emerald-600 font-medium mt-0.5 block">
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5 block">
               ✓ Free Official IIGF Shuttle Bus Connected
             </span>
           </div>
 
           <div>
-            <label className="font-bold text-slate-600 block mb-1">Target Sourcing Category:</label>
+            <label className="font-bold text-slate-600 dark:text-slate-400 block mb-1">Target Sourcing Category:</label>
             <input
               type="text"
               value={sourcingFocus}
               onChange={(e) => setSourcingFocus(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-bold text-slate-900 focus:outline-none focus:border-[#E6005C]"
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#E6005C] dark:focus:border-pink-500"
             />
-            <span className="text-[11px] text-[#E6005C] font-semibold mt-0.5 block">
+            <span className="text-[11px] text-[#E6005C] dark:text-pink-400 font-semibold mt-0.5 block">
               Matched with 426 Certified Exporters
             </span>
           </div>
         </div>
 
         {/* Action Export Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-2">
             <button
               onClick={() => showToast('Calendar invite (.ICS) generated with all 4 days synced!')}
-              className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors"
+              className="px-3.5 py-2 bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors"
             >
               <Calendar className="w-3.5 h-3.5" />
               <span>Export to Calendar (.ICS)</span>
@@ -858,7 +858,7 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
 
             <button
               onClick={() => showToast('PDF Comprehensive Trade & Travel Dossier downloaded!')}
-              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg font-bold text-xs flex items-center gap-1.5 border border-slate-300 cursor-pointer transition-colors"
+              className="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-lg font-bold text-xs flex items-center gap-1.5 border border-slate-300 dark:border-slate-700 cursor-pointer transition-colors"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Download PDF Guide</span>
@@ -874,7 +874,7 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
           </div>
 
           {toastNotice && (
-            <span className="text-xs font-bold text-[#E6005C] bg-pink-50 px-3 py-1 rounded-lg border border-pink-200 animate-fadeIn">
+            <span className="text-xs font-bold text-[#E6005C] dark:text-pink-300 bg-pink-50 dark:bg-pink-950/60 px-3 py-1 rounded-lg border border-pink-200 dark:border-pink-800 animate-fadeIn">
               {toastNotice}
             </span>
           )}
@@ -889,15 +889,15 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
             onClick={() => {
               setSelectedDay(d.dayNumber);
             }}
-            className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
+            className={`p-4 rounded-2xl border text-left transition-all cursor-pointer dark-3d-card ${
               selectedDay === d.dayNumber
-                ? 'bg-[#E6005C] text-white border-[#E6005C] shadow-md ring-2 ring-pink-300 scale-101'
-                : 'bg-white text-slate-800 border-slate-200 hover:border-pink-300 hover:bg-pink-50/40'
+                ? 'bg-[#E6005C] text-white border-[#E6005C] shadow-md dark:shadow-[0_0_20px_rgba(230,0,92,0.4)] ring-2 ring-pink-300 scale-101'
+                : 'bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-800 hover:border-pink-300 hover:bg-pink-50/40 dark:hover:bg-slate-800'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
               <span className={`text-[10px] uppercase font-black tracking-wider ${
-                selectedDay === d.dayNumber ? 'text-amber-300' : 'text-[#E6005C]'
+                selectedDay === d.dayNumber ? 'text-amber-300' : 'text-[#E6005C] dark:text-pink-400'
               }`}>
                 Day 0{d.dayNumber} Route
               </span>
@@ -911,7 +911,7 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
               {d.date.split(',')[1]}
             </h4>
             <p className={`text-[11px] line-clamp-2 mt-1 leading-snug ${
-              selectedDay === d.dayNumber ? 'text-white/90' : 'text-slate-500'
+              selectedDay === d.dayNumber ? 'text-white/90' : 'text-slate-500 dark:text-slate-400'
             }`}>
               {d.highlight}
             </p>
@@ -924,36 +924,36 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
         {/* Left Column: Itinerary Cards with Rich Photos & Google Business Badges */}
         {(viewMode === 'split' || viewMode === 'list') && (
           <div className={`${viewMode === 'split' ? 'lg:col-span-7' : 'w-full'} space-y-6`}>
-            <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
                 <div>
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#E6005C] uppercase tracking-wider">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#E6005C] dark:text-pink-400 uppercase tracking-wider">
                     <span>Day {currentDayPlan.dayNumber} Schedule</span>
                     <span>·</span>
                     <span>{currentDayPlan.date}</span>
                   </div>
-                  <h2 className="text-lg sm:text-xl font-black text-slate-900 mt-0.5">
+                  <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white mt-0.5">
                     {currentDayPlan.title}
                   </h2>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 flex items-center gap-1">
-                    <Route className="w-3.5 h-3.5 text-amber-600" />
+                  <span className="text-xs font-bold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-1 rounded-lg border border-amber-200 dark:border-amber-800 flex items-center gap-1">
+                    <Route className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                     <span>Plotted on Map</span>
                   </span>
-                  <span className="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">
+                  <span className="text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
                     {currentDayPlan.items.length} Stops
                   </span>
                 </div>
               </div>
 
               {/* Items List */}
-              <div className="space-y-4 relative before:absolute before:inset-0 before:left-4 before:w-0.5 before:bg-slate-200">
+              <div className="space-y-4 relative before:absolute before:inset-0 before:left-4 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-800">
                 {currentDayPlan.items.map((item, idx) => (
                   <div key={item.id} className="relative pl-10 group">
                     {/* Numbered Waypoint Dot */}
-                    <div className="absolute left-1.5 top-4 -translate-x-1/2 w-6 h-6 rounded-full bg-[#E6005C] text-white font-bold text-[10px] flex items-center justify-center shadow-xs z-10">
+                    <div className="absolute left-1.5 top-4 -translate-x-1/2 w-6 h-6 rounded-full bg-[#E6005C] dark:bg-pink-500 text-white font-bold text-[10px] flex items-center justify-center shadow-xs z-10">
                       {idx + 1}
                     </div>
 
@@ -965,8 +965,10 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                           setSelectedMarkerId(item.placeInfo.id);
                         }
                       }}
-                      className={`bg-slate-50/80 hover:bg-white border rounded-2xl p-4 sm:p-5 transition-all space-y-3 shadow-xs ${
-                        activeItemId === item.id ? 'border-[#E6005C] ring-2 ring-pink-100 bg-white' : 'border-slate-200'
+                      className={`bg-slate-50/80 dark:bg-slate-950 hover:bg-white dark:hover:bg-slate-900/90 border rounded-2xl p-4 sm:p-5 transition-all space-y-3 shadow-xs dark-3d-card ${
+                        activeItemId === item.id 
+                          ? 'border-[#E6005C] dark:border-pink-500 ring-2 ring-pink-100 dark:ring-pink-900/40 bg-white dark:bg-slate-900' 
+                          : 'border-slate-200 dark:border-slate-800'
                       }`}
                     >
                       {/* Photo + Header Row */}
@@ -976,7 +978,7 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                           onClick={() => {
                             if (item.placeInfo) handleFocusPlace(item.placeInfo);
                           }}
-                          className="relative w-full sm:w-36 h-28 sm:h-28 rounded-xl overflow-hidden shrink-0 border border-slate-200 shadow-xs group/img cursor-pointer"
+                          className="relative w-full sm:w-36 h-28 sm:h-28 rounded-xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-800 shadow-xs group/img cursor-pointer"
                         >
                           <img
                             src={item.image}
@@ -994,14 +996,14 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                         <div className="flex-1 space-y-1.5">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-black text-slate-900 tabular-nums bg-white px-2 py-0.5 rounded border border-slate-200">
+                              <span className="text-xs font-black text-slate-900 dark:text-white tabular-nums bg-white dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
                                 {item.time}
                               </span>
                               <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded border ${getCategoryBadgeClass(item.category)}`}>
                                 {item.category}
                               </span>
                               {item.badge && (
-                                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
                                   {item.badge}
                                 </span>
                               )}
@@ -1011,18 +1013,18 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                               onClick={() => {
                                 if (item.placeInfo) handleFocusPlace(item.placeInfo);
                               }}
-                              className="text-[11px] font-semibold text-slate-600 hover:text-[#E6005C] flex items-center gap-1 cursor-pointer"
+                              className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 hover:text-[#E6005C] dark:hover:text-pink-400 flex items-center gap-1 cursor-pointer"
                             >
-                              <MapPin className="w-3.5 h-3.5 text-[#E6005C]" />
+                              <MapPin className="w-3.5 h-3.5 text-[#E6005C] dark:text-pink-400" />
                               <span>{item.location}</span>
                             </button>
                           </div>
 
-                          <h3 className="text-sm sm:text-base font-black text-slate-900 leading-snug">
+                          <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-snug">
                             {item.title}
                           </h3>
 
-                          <p className="text-xs text-slate-600 leading-relaxed line-clamp-2">
+                          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2">
                             {item.desc}
                           </p>
                         </div>
@@ -1030,20 +1032,20 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
 
                       {/* Google Business Profile Mini Bar & Actions */}
                       {item.placeInfo && (
-                        <div className="pt-2.5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+                        <div className="pt-2.5 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
                           {/* Rating & Review Counter */}
                           <button
                             onClick={() => setActivePlaceModal(item.placeInfo!)}
-                            className="flex items-center gap-2 text-slate-700 hover:text-[#E6005C] font-semibold cursor-pointer group/btn"
+                            className="flex items-center gap-2 text-slate-700 dark:text-slate-300 hover:text-[#E6005C] dark:hover:text-pink-400 font-semibold cursor-pointer group/btn"
                           >
-                            <div className="flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 text-amber-900 font-bold text-[11px]">
+                            <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-300 font-bold text-[11px]">
                               <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
                               <span>{item.placeInfo.rating}</span>
                             </div>
-                            <span className="text-[11px] text-slate-500 group-hover/btn:underline">
+                            <span className="text-[11px] text-slate-500 dark:text-slate-400 group-hover/btn:underline">
                               ({item.placeInfo.reviewsCount.toLocaleString()} Google Reviews)
                             </span>
-                            <span className="text-[10px] font-bold text-[#E6005C] bg-pink-50 px-1.5 py-0.5 rounded">
+                            <span className="text-[10px] font-bold text-[#E6005C] dark:text-pink-400 bg-pink-50 dark:bg-pink-950/60 px-1.5 py-0.5 rounded">
                               View Google Profile
                             </span>
                           </button>
@@ -1052,9 +1054,9 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleFocusPlace(item.placeInfo!)}
-                              className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 rounded-md border border-slate-300 text-[11px] font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                              className="px-2.5 py-1 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-md border border-slate-300 dark:border-slate-700 text-[11px] font-bold flex items-center gap-1 transition-colors cursor-pointer"
                             >
-                              <Navigation className="w-3 h-3 text-[#E6005C]" />
+                              <Navigation className="w-3 h-3 text-[#E6005C] dark:text-pink-400" />
                               <span>Locate on Map</span>
                             </button>
 
@@ -1062,9 +1064,9 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                               href={item.placeInfo.googleMapsUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 rounded-md border border-slate-300 text-[11px] font-bold flex items-center gap-1 transition-colors"
+                              className="px-2.5 py-1 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-md border border-slate-300 dark:border-slate-700 text-[11px] font-bold flex items-center gap-1 transition-colors"
                             >
-                              <ExternalLink className="w-3 h-3 text-blue-600" />
+                              <ExternalLink className="w-3 h-3 text-blue-600 dark:text-blue-400" />
                               <span>Directions</span>
                             </a>
 
@@ -1091,22 +1093,22 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
         {(viewMode === 'split' || viewMode === 'map') && (
           <div className={`${viewMode === 'split' ? 'lg:col-span-5' : 'w-full'} space-y-6`}>
             {/* Real Map Container */}
-            <div className="bg-white rounded-3xl p-5 border border-slate-200 text-slate-900 shadow-md space-y-4 sticky top-24">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white shadow-md space-y-4 sticky top-24">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                  <h3 className="text-xs font-black uppercase text-slate-900 tracking-wider flex items-center gap-1.5">
-                    <Navigation className="w-3.5 h-3.5 text-[#E6005C]" />
+                  <h3 className="text-xs font-black uppercase text-slate-900 dark:text-white tracking-wider flex items-center gap-1.5">
+                    <Navigation className="w-3.5 h-3.5 text-[#E6005C] dark:text-pink-400" />
                     <span>Real Google Map · Day {selectedDay} Plotted Route</span>
                   </h3>
                 </div>
 
                 {/* Map Type Controls */}
-                <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-[10px] font-bold">
+                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-0.5 rounded-lg text-[10px] font-bold">
                   <button
                     onClick={() => setMapType('roadmap')}
                     className={`px-2 py-1 rounded transition-colors cursor-pointer ${
-                      mapType === 'roadmap' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
+                      mapType === 'roadmap' ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs' : 'text-slate-600 dark:text-slate-400'
                     }`}
                   >
                     Map
@@ -1114,7 +1116,7 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                   <button
                     onClick={() => setMapType('hybrid')}
                     className={`px-2 py-1 rounded transition-colors cursor-pointer ${
-                      mapType === 'hybrid' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
+                      mapType === 'hybrid' ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs' : 'text-slate-600 dark:text-slate-400'
                     }`}
                   >
                     Satellite
@@ -1123,7 +1125,7 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
               </div>
 
               {/* Real Map Canvas Wrapper */}
-              <div className="relative w-full h-[450px] rounded-2xl overflow-hidden border border-slate-200 shadow-inner bg-slate-100">
+              <div className="relative w-full h-[450px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-inner bg-slate-100 dark:bg-slate-950">
                 <APIProvider apiKey={googleMapsApiKey}>
                   <Map
                     mapId="DEMO_MAP_ID"
@@ -1174,21 +1176,21 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                             position={{ lat: selectedPlace.coordinates.lat, lng: selectedPlace.coordinates.lng }}
                             onCloseClick={() => setSelectedMarkerId(null)}
                           >
-                            <div className="p-2 max-w-[220px] text-xs space-y-1.5 font-sans">
-                              <span className="text-[10px] font-bold text-[#E6005C] uppercase block">
+                            <div className="p-2 max-w-[220px] text-xs space-y-1.5 font-sans bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
+                              <span className="text-[10px] font-bold text-[#E6005C] dark:text-pink-400 uppercase block">
                                 {selectedPlace.tag}
                               </span>
-                              <h4 className="font-black text-slate-900 text-xs line-clamp-1">
+                              <h4 className="font-black text-slate-900 dark:text-white text-xs line-clamp-1">
                                 {selectedPlace.name}
                               </h4>
-                              <div className="flex items-center gap-1 text-[11px] text-amber-600 font-bold">
+                              <div className="flex items-center gap-1 text-[11px] text-amber-600 dark:text-amber-400 font-bold">
                                 <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
                                 <span>{selectedPlace.rating}</span>
                                 <span className="text-slate-400 font-normal">
                                   ({selectedPlace.reviewsCount.toLocaleString()})
                                 </span>
                               </div>
-                              <p className="text-[10px] text-slate-500 line-clamp-2">
+                              <p className="text-[10px] text-slate-500 dark:text-slate-300 line-clamp-2">
                                 {selectedPlace.address}
                               </p>
                               <button
@@ -1213,9 +1215,9 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                       setMapZoom(14);
                       setSelectedMarkerId(PLACES_DB.bharatMandapam.id);
                     }}
-                    className="px-2.5 py-1 bg-white/95 hover:bg-white text-slate-900 rounded-lg text-[10px] font-bold shadow border border-slate-200 cursor-pointer backdrop-blur-xs flex items-center gap-1"
+                    className="px-2.5 py-1 bg-white/95 dark:bg-slate-900/95 hover:bg-white text-slate-900 dark:text-white rounded-lg text-[10px] font-bold shadow border border-slate-200 dark:border-slate-700 cursor-pointer backdrop-blur-xs flex items-center gap-1"
                   >
-                    <Sparkles className="w-3 h-3 text-[#E6005C]" />
+                    <Sparkles className="w-3 h-3 text-[#E6005C] dark:text-pink-400" />
                     <span>Bharat Mandapam</span>
                   </button>
 
@@ -1225,9 +1227,9 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                       setMapZoom(15);
                       setSelectedMarkerId(PLACES_DB.tajHotel.id);
                     }}
-                    className="px-2.5 py-1 bg-white/95 hover:bg-white text-slate-900 rounded-lg text-[10px] font-bold shadow border border-slate-200 cursor-pointer backdrop-blur-xs flex items-center gap-1"
+                    className="px-2.5 py-1 bg-white/95 dark:bg-slate-900/95 hover:bg-white text-slate-900 dark:text-white rounded-lg text-[10px] font-bold shadow border border-slate-200 dark:border-slate-700 cursor-pointer backdrop-blur-xs flex items-center gap-1"
                   >
-                    <Building2 className="w-3 h-3 text-purple-600" />
+                    <Building2 className="w-3 h-3 text-purple-600 dark:text-purple-400" />
                     <span>Hotel Hub</span>
                   </button>
 
@@ -1237,9 +1239,9 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                       setMapZoom(14);
                       setSelectedMarkerId(PLACES_DB.airport.id);
                     }}
-                    className="px-2.5 py-1 bg-white/95 hover:bg-white text-slate-900 rounded-lg text-[10px] font-bold shadow border border-slate-200 cursor-pointer backdrop-blur-xs flex items-center gap-1"
+                    className="px-2.5 py-1 bg-white/95 dark:bg-slate-900/95 hover:bg-white text-slate-900 dark:text-white rounded-lg text-[10px] font-bold shadow border border-slate-200 dark:border-slate-700 cursor-pointer backdrop-blur-xs flex items-center gap-1"
                   >
-                    <Plane className="w-3 h-3 text-blue-600" />
+                    <Plane className="w-3 h-3 text-blue-600 dark:text-blue-400" />
                     <span>Airport T3</span>
                   </button>
 
@@ -1249,36 +1251,36 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                       setMapZoom(15);
                       setSelectedMarkerId(PLACES_DB.bukhara.id);
                     }}
-                    className="px-2.5 py-1 bg-white/95 hover:bg-white text-slate-900 rounded-lg text-[10px] font-bold shadow border border-slate-200 cursor-pointer backdrop-blur-xs flex items-center gap-1"
+                    className="px-2.5 py-1 bg-white/95 dark:bg-slate-900/95 hover:bg-white text-slate-900 dark:text-white rounded-lg text-[10px] font-bold shadow border border-slate-200 dark:border-slate-700 cursor-pointer backdrop-blur-xs flex items-center gap-1"
                   >
-                    <Utensils className="w-3 h-3 text-emerald-600" />
+                    <Utensils className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                     <span>Bukhara</span>
                   </button>
                 </div>
               </div>
 
               {/* Real-time Distance & Transit Optimization Bar */}
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs space-y-2">
-                <div className="flex items-center justify-between font-bold text-slate-900">
-                  <span className="text-[#E6005C] flex items-center gap-1.5">
+              <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 text-xs space-y-2">
+                <div className="flex items-center justify-between font-bold text-slate-900 dark:text-white">
+                  <span className="text-[#E6005C] dark:text-pink-400 flex items-center gap-1.5">
                     <Route className="w-3.5 h-3.5" />
                     <span>Day {selectedDay} Plotted Route Sequence ({currentDayPlan.routeCoords.length} Points):</span>
                   </span>
-                  <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-bold border border-emerald-200">
+                  <span className="text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded font-bold border border-emerald-200 dark:border-emerald-800">
                     Active GPS Polyline
                   </span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-600 pt-1">
-                  <div className="p-2 bg-white rounded-lg border border-slate-200">
-                    <strong className="block text-slate-800">Airport ➔ Hotel</strong>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-600 dark:text-slate-300 pt-1">
+                  <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+                    <strong className="block text-slate-800 dark:text-white">Airport ➔ Hotel</strong>
                     <span>14 km · ~20 mins</span>
                   </div>
-                  <div className="p-2 bg-white rounded-lg border border-slate-200">
-                    <strong className="block text-slate-800">Hotel ➔ Fair Ground</strong>
+                  <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+                    <strong className="block text-slate-800 dark:text-white">Hotel ➔ Fair Ground</strong>
                     <span>4.2 km · ~10 mins</span>
                   </div>
-                  <div className="p-2 bg-white rounded-lg border border-slate-200">
-                    <strong className="block text-slate-800">Fair ➔ Dining/Culture</strong>
+                  <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+                    <strong className="block text-slate-800 dark:text-white">Fair ➔ Dining/Culture</strong>
                     <span>6 km · ~15 mins</span>
                   </div>
                 </div>
@@ -1290,8 +1292,8 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
 
       {/* Google Business Profile Modal / Drawer */}
       {activePlaceModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 overflow-y-auto animate-fadeIn">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full border border-slate-200 overflow-hidden my-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 overflow-y-auto animate-fadeIn backdrop-blur-xs">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-2xl w-full border border-slate-200 dark:border-slate-800 overflow-hidden my-6">
             {/* Modal Header Photo Carousel */}
             <div className="relative h-56 w-full bg-slate-900 overflow-hidden">
               <img
@@ -1299,7 +1301,7 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                 alt={activePlaceModal.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
               <button
                 onClick={() => setActivePlaceModal(null)}
@@ -1309,7 +1311,7 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
               </button>
 
               <div className="absolute bottom-4 left-6 right-6 text-white space-y-1">
-                <span className="text-[11px] font-bold text-amber-300 bg-black/40 px-2 py-0.5 rounded backdrop-blur-xs">
+                <span className="text-[11px] font-bold text-amber-300 bg-black/50 px-2 py-0.5 rounded backdrop-blur-xs">
                   {activePlaceModal.tag}
                 </span>
                 <h2 className="text-xl sm:text-2xl font-black text-white">{activePlaceModal.name}</h2>
@@ -1318,11 +1320,11 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
             </div>
 
             {/* Modal Body */}
-            <div className="p-6 space-y-5 text-xs text-slate-700">
+            <div className="p-6 space-y-5 text-xs text-slate-700 dark:text-slate-200">
               {/* Star Rating Bar */}
-              <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-amber-50/70 border border-amber-200 rounded-2xl">
+              <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-2xl">
                 <div className="flex items-center gap-3">
-                  <div className="text-2xl font-black text-amber-900 flex items-center gap-1">
+                  <div className="text-2xl font-black text-amber-900 dark:text-amber-300 flex items-center gap-1">
                     <span>{activePlaceModal.rating}</span>
                     <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
                   </div>
@@ -1332,45 +1334,45 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                         <Star key={i} className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                       ))}
                     </div>
-                    <span className="text-[11px] text-slate-600 font-semibold">
+                    <span className="text-[11px] text-slate-600 dark:text-slate-400 font-semibold">
                       {activePlaceModal.reviewsCount.toLocaleString()} verified Google Reviews
                     </span>
                   </div>
                 </div>
 
-                <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full flex items-center gap-1">
+                <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 px-3 py-1 rounded-full flex items-center gap-1 border border-emerald-200 dark:border-emerald-800">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Google Verified Business</span>
                 </span>
               </div>
 
               {/* Address & Hours */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
                 <div className="space-y-1">
-                  <strong className="text-slate-900 block flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#E6005C]" />
+                  <strong className="text-slate-900 dark:text-white block flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#E6005C] dark:text-pink-400" />
                     <span>Address:</span>
                   </strong>
-                  <p className="text-slate-600">{activePlaceModal.address}</p>
+                  <p className="text-slate-600 dark:text-slate-400">{activePlaceModal.address}</p>
                 </div>
 
                 <div className="space-y-1">
-                  <strong className="text-slate-900 block flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                  <strong className="text-slate-900 dark:text-white block flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                     <span>Hours:</span>
                   </strong>
-                  <p className="text-slate-600">{activePlaceModal.hours}</p>
+                  <p className="text-slate-600 dark:text-slate-400">{activePlaceModal.hours}</p>
                 </div>
               </div>
 
               {/* Featured Amenities / Badges */}
               <div className="space-y-2">
-                <strong className="text-slate-900 uppercase text-[11px] tracking-wider block">
+                <strong className="text-slate-900 dark:text-white uppercase text-[11px] tracking-wider block">
                   Highlights & Amenities:
                 </strong>
                 <div className="flex flex-wrap gap-1.5">
                   {activePlaceModal.features.map((f, i) => (
-                    <span key={i} className="px-2.5 py-1 bg-white border border-slate-300 rounded-lg text-[11px] font-semibold text-slate-700">
+                    <span key={i} className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-[11px] font-semibold text-slate-700 dark:text-slate-300">
                       ✓ {f}
                     </span>
                   ))}
@@ -1378,25 +1380,25 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
               </div>
 
               {/* Top Verified Review Quote */}
-              <div className="bg-[#FDF2F5] border border-pink-200 p-4 rounded-xl space-y-1.5">
+              <div className="bg-[#FDF2F5] dark:bg-pink-950/30 border border-pink-200 dark:border-pink-900/60 p-4 rounded-xl space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-[#E6005C] text-[11px]">
+                  <span className="font-bold text-[#E6005C] dark:text-pink-400 text-[11px]">
                     {activePlaceModal.topReview.author}
                   </span>
-                  <span className="text-[10px] text-slate-500 font-medium">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
                     {activePlaceModal.topReview.source}
                   </span>
                 </div>
-                <p className="text-xs text-slate-700 italic leading-relaxed">
+                <p className="text-xs text-slate-700 dark:text-slate-300 italic leading-relaxed">
                   "{activePlaceModal.topReview.text}"
                 </p>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-200">
+              <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
                 <button
                   onClick={() => setActivePlaceModal(null)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold cursor-pointer"
+                  className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-bold cursor-pointer"
                 >
                   Close
                 </button>
@@ -1405,7 +1407,7 @@ export const BuyerTripPlannerView: React.FC<BuyerTripPlannerViewProps> = ({
                   href={activePlaceModal.googleMapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-5 py-2 bg-[#E6005C] hover:bg-[#C2004D] text-white rounded-xl font-bold flex items-center gap-1.5 shadow-sm cursor-pointer"
+                  className="px-5 py-2 bg-[#E6005C] hover:bg-[#C2004D] text-white rounded-xl font-bold flex items-center gap-1.5 shadow-sm cursor-pointer dark:shadow-[0_0_15px_rgba(230,0,92,0.4)]"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   <span>Open in Google Maps & Get Directions</span>
