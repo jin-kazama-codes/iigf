@@ -18,6 +18,9 @@ import { BuyerRegistrationModal } from './components/BuyerRegistrationModal';
 import { GuidedTourModal } from './components/GuidedTourModal';
 import { FloatingChatWidget } from './components/FloatingChatWidget';
 import { BuyerTripPlannerView } from './components/BuyerTripPlannerView';
+import { AiCallerModal } from './components/AiCallerModal';
+import { ScreenDemoExplainer } from './components/ScreenDemoExplainer';
+import { PwaInstallBanner } from './components/PwaInstallBanner';
 import { ThemeProvider } from './context/ThemeContext';
 import { 
   DEMO_EXHIBITORS, 
@@ -42,6 +45,7 @@ export default function App() {
   const [selectedExhibitorForMeeting, setSelectedExhibitorForMeeting] = useState<Exhibitor | null>(null);
   const [meetingForCopilot, setMeetingForCopilot] = useState<Meeting | null>(null);
   const [isGuidedTourOpen, setIsGuidedTourOpen] = useState(false);
+  const [isAiCallerOpen, setIsAiCallerOpen] = useState(false);
   const [companionInitialStall, setCompanionInitialStall] = useState<{ hall: string; stall: string } | undefined>(undefined);
 
   // Centralized helper to close all overlapping modals
@@ -51,6 +55,7 @@ export default function App() {
     setSelectedExhibitorForModal(null);
     setSelectedExhibitorForMeeting(null);
     setMeetingForCopilot(null);
+    setIsAiCallerOpen(false);
   };
 
   const handleOpenRegisterModal = () => {
@@ -130,6 +135,10 @@ export default function App() {
           setCurrentTab('concierge');
           window.scrollTo({ top: 0 });
         }}
+        onOpenAiCaller={() => {
+          closeAllModals();
+          setIsAiCallerOpen(true);
+        }}
         onStartGuidedTour={() => {
           closeAllModals();
           setIsGuidedTourOpen(true);
@@ -138,6 +147,9 @@ export default function App() {
 
       {/* Main Content Router */}
       <main className="flex-1">
+        {/* Screen Demo Explainer & Client Pitch Guide */}
+        <ScreenDemoExplainer currentTab={currentTab} />
+
         {currentTab === 'home' && (
           <div>
             <HeroSection
@@ -315,6 +327,10 @@ export default function App() {
       <FloatingChatWidget 
         onOpenExhibitorModal={handleOpenExhibitorModal}
         onBookMeeting={handleOpenBookMeeting}
+        onOpenAiCaller={() => {
+          closeAllModals();
+          setIsAiCallerOpen(true);
+        }}
       />
 
       {/* Toast Notification */}
@@ -394,6 +410,15 @@ export default function App() {
         onBookMeeting={handleOpenBookMeeting}
         onOpenMeetingCopilot={handleOpenMeetingCopilot}
       />
+
+      {/* 6. AI Voice Caller Modal (3D Holographic Audio Concierge) */}
+      <AiCallerModal
+        isOpen={isAiCallerOpen}
+        onClose={() => setIsAiCallerOpen(false)}
+      />
+
+      {/* 7. PWA Mobile Installation Prompt Banner */}
+      <PwaInstallBanner />
       </div>
     </ThemeProvider>
   );

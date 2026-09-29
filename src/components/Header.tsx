@@ -7,7 +7,9 @@ import {
   ChevronDown, 
   Globe, 
   Search, 
-  MessageSquare 
+  MessageSquare,
+  PhoneCall,
+  Mic
 } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -29,6 +31,7 @@ interface HeaderProps {
   onSelectTab: (tab: NavTab) => void;
   onOpenRegisterModal: () => void;
   onOpenConciergeModal: () => void;
+  onOpenAiCaller: () => void;
   onStartGuidedTour: () => void;
 }
 
@@ -37,6 +40,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectTab,
   onOpenRegisterModal,
   onOpenConciergeModal,
+  onOpenAiCaller,
   onStartGuidedTour
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -99,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </div>
 
-        {/* Right: Bharat Tex & AEPC Logos + Compact Theme Toggle + 14-Step Hero Tour */}
+        {/* Right: Bharat Tex & AEPC Logos + AI Voice Caller Button + Compact Theme Toggle + 14-Step Hero Tour */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Bharat Tex & AEPC Emblems */}
           <div className="hidden sm:flex items-center gap-2">
@@ -112,6 +116,17 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="text-[8px] font-semibold text-slate-600 dark:text-slate-400">Govt of India</span>
             </div>
           </div>
+
+          {/* AI Caller Launcher in Top Bar */}
+          <button
+            onClick={onOpenAiCaller}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-500 via-amber-600 to-[#EB8B2D] hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs rounded-xl shadow-sm border border-amber-300/40 transition-all cursor-pointer group"
+            title="Launch Autonomous AI Voice Agent"
+          >
+            <div className="w-2 h-2 rounded-full bg-slate-950 animate-ping" />
+            <PhoneCall className="w-3.5 h-3.5 text-slate-950" />
+            <span>AI Voice Caller</span>
+          </button>
 
           {/* Compact Theme Toggle Button (Icon Only) */}
           <ThemeToggle />
@@ -176,6 +191,14 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Right Action Buttons */}
           <div className="flex items-center gap-2 ml-auto">
             <button
+              onClick={onOpenAiCaller}
+              className="px-3 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black rounded shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer border border-amber-300"
+            >
+              <PhoneCall className="w-3.5 h-3.5 text-slate-950" />
+              <span>AI Caller</span>
+            </button>
+
+            <button
               onClick={onOpenConciergeModal}
               className="px-3 py-1.5 bg-white dark:bg-slate-900 text-[#E6005C] dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-slate-800 text-xs font-extrabold rounded shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer dark:border dark:border-pink-500/40"
             >
@@ -213,6 +236,17 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           ))}
           <div className="pt-2 border-t border-white/20 dark:border-slate-800 flex flex-col gap-2">
+            <button
+              onClick={() => {
+                onOpenAiCaller();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full py-2 bg-amber-400 text-slate-950 font-black text-xs rounded flex items-center justify-center gap-1.5"
+            >
+              <PhoneCall className="w-4 h-4" />
+              <span>Open AI Voice Caller</span>
+            </button>
+
             <button
               onClick={() => {
                 onStartGuidedTour();
