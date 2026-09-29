@@ -1,0 +1,6 @@
+{
+  "name": "IIGF AI — Sourcing & Event Intelligence Platform",
+  "description": "AI-Powered Global Garment Sourcing & Event Intelligence Platform for the India International Garment Fair (IIGF). Intelligent matchmaking, fair companion, and organizer command center.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
