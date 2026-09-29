@@ -27,6 +27,7 @@ interface GuidedTourModalProps {
   onOpenExhibitorModal: (exhibitor: Exhibitor) => void;
   onBookMeeting: (exhibitor: Exhibitor) => void;
   onOpenMeetingCopilot: (meeting: Meeting) => void;
+  onCloseAllModals?: () => void;
 }
 
 export const GuidedTourModal: React.FC<GuidedTourModalProps> = ({
@@ -36,11 +37,19 @@ export const GuidedTourModal: React.FC<GuidedTourModalProps> = ({
   onOpenConciergeModal,
   onOpenExhibitorModal,
   onBookMeeting,
-  onOpenMeetingCopilot
+  onOpenMeetingCopilot,
+  onCloseAllModals
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
 
   if (!isOpen) return null;
+
+  const executeStepAction = (stepIndex: number) => {
+    if (onCloseAllModals) {
+      onCloseAllModals();
+    }
+    tourSteps[stepIndex].runAction();
+  };
 
   const tourSteps = [
     {
@@ -105,14 +114,21 @@ export const GuidedTourModal: React.FC<GuidedTourModalProps> = ({
     },
     {
       step: 9,
-      title: 'STEP 9: Real-Time AI Translation During Meeting',
+      title: 'STEP 9: AI Fair & Trip Planner for Global Buyers',
+      desc: 'Overseas buyers receive an autonomous 4-day itinerary syncing DEL airport transfers, hotel check-ins, route-optimized booth meetings, live Google Maps route lines, and curated Delhi dining.',
+      actionLabel: 'Open AI Fair & Trip Planner',
+      runAction: () => onSelectTab('fair-planner')
+    },
+    {
+      step: 10,
+      title: 'STEP 10: Real-Time AI Translation During Meeting',
       desc: 'At Stall B-17, the UK buyer speaks English and the Indian master weaver speaks Hindi. The AI Fair Companion performs real-time audio translation.',
       actionLabel: 'Open Translation Simulator',
       runAction: () => onSelectTab('companion')
     },
     {
-      step: 10,
-      title: 'STEP 10: Meeting Generates AI Summary',
+      step: 11,
+      title: 'STEP 11: Meeting Generates AI Summary',
       desc: 'Post-meeting audio memo extracts buyer requirements (100% GOTS organic cotton) and exhibitor commitments (ship swatches to London).',
       actionLabel: 'Open Meeting Copilot Summary',
       runAction: () => {
@@ -133,8 +149,8 @@ export const GuidedTourModal: React.FC<GuidedTourModalProps> = ({
       }
     },
     {
-      step: 11,
-      title: 'STEP 11: AI Generates Automated Follow-Up',
+      step: 12,
+      title: 'STEP 12: AI Generates Automated Follow-Up',
       desc: 'Generates polished WhatsApp and commercial email follow-ups with FOB pricing and swatch tracking, ready for 1-click human approval.',
       actionLabel: 'Review Follow-up Automation',
       runAction: () => {
@@ -142,15 +158,15 @@ export const GuidedTourModal: React.FC<GuidedTourModalProps> = ({
       }
     },
     {
-      step: 12,
-      title: 'STEP 12: Exhibitor Sees Lead in AI Sales Copilot',
+      step: 13,
+      title: 'STEP 13: Exhibitor Sees Lead in AI Sales Copilot',
       desc: 'ABC Textiles sales team tracks Sarah Williams as a HIGH INTENT lead (Score 94) inside their AI Copilot dashboard.',
       actionLabel: 'Open Exhibitor Sales Copilot',
       runAction: () => onSelectTab('exhibitor-copilot')
     },
     {
-      step: 13,
-      title: 'STEP 13: Organizer Sees Entire Journey in Command Center',
+      step: 14,
+      title: 'STEP 14: Organizer Sees Entire Journey in Command Center',
       desc: 'IIGF fair management monitors the completed interaction across 12,842 buyers, macro country flows, and asks natural language queries via "Ask IIGF Data".',
       actionLabel: 'Open Organizer Command Center',
       runAction: () => onSelectTab('command-center')
@@ -163,7 +179,7 @@ export const GuidedTourModal: React.FC<GuidedTourModalProps> = ({
     if (currentStep < tourSteps.length) {
       const nextStepNum = currentStep + 1;
       setCurrentStep(nextStepNum);
-      tourSteps[nextStepNum - 1].runAction();
+      executeStepAction(nextStepNum - 1);
     }
   };
 
@@ -171,8 +187,15 @@ export const GuidedTourModal: React.FC<GuidedTourModalProps> = ({
     if (currentStep > 1) {
       const prevStepNum = currentStep - 1;
       setCurrentStep(prevStepNum);
-      tourSteps[prevStepNum - 1].runAction();
+      executeStepAction(prevStepNum - 1);
     }
+  };
+
+  const handleClose = () => {
+    if (onCloseAllModals) {
+      onCloseAllModals();
+    }
+    onClose();
   };
 
   return (
@@ -192,7 +215,7 @@ export const GuidedTourModal: React.FC<GuidedTourModalProps> = ({
         </div>
 
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="text-slate-400 hover:text-white p-1 rounded cursor-pointer"
         >
           <X className="w-4 h-4" />
@@ -208,7 +231,7 @@ export const GuidedTourModal: React.FC<GuidedTourModalProps> = ({
               key={s.step}
               onClick={() => {
                 setCurrentStep(s.step);
-                s.runAction();
+                executeStepAction(s.step - 1);
               }}
               title={s.title}
               className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
@@ -235,7 +258,7 @@ export const GuidedTourModal: React.FC<GuidedTourModalProps> = ({
         {/* Action Button that switches page/modal */}
         <div className="pt-2">
           <button
-            onClick={() => currentStepData.runAction()}
+            onClick={() => executeStepAction(currentStep - 1)}
             className="w-full py-2 bg-[#162F56] hover:bg-[#1E3F74] text-slate-200 hover:text-white rounded-lg border border-[#274B7F] font-semibold flex items-center justify-center gap-2 cursor-pointer transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#F59E0B]" />
@@ -265,7 +288,7 @@ export const GuidedTourModal: React.FC<GuidedTourModalProps> = ({
           </button>
         ) : (
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-sm flex items-center gap-1 cursor-pointer transition-colors"
           >
             <span>Finish Tour</span>

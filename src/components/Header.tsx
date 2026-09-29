@@ -18,6 +18,7 @@ export type NavTab =
   | 'matchmaking' 
   | 'meetings' 
   | 'companion' 
+  | 'fair-planner'
   | 'exhibitor-copilot' 
   | 'command-center' 
   | 'architecture';
@@ -61,6 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
       ]
     },
     { id: 'matchmaking', label: 'AI Matchmaking' },
+    { id: 'fair-planner', label: 'AI Fair & Trip Planner' },
     { id: 'meetings', label: 'Meetings & Agenda' },
     { id: 'companion', label: 'Fair Companion' },
     { id: 'command-center', label: 'Command Center' },

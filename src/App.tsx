@@ -17,6 +17,7 @@ import { ArchitectureView } from './components/ArchitectureView';
 import { BuyerRegistrationModal } from './components/BuyerRegistrationModal';
 import { GuidedTourModal } from './components/GuidedTourModal';
 import { FloatingChatWidget } from './components/FloatingChatWidget';
+import { BuyerTripPlannerView } from './components/BuyerTripPlannerView';
 import { 
   DEMO_EXHIBITORS, 
   DEMO_BUYER_DEFAULT, 
@@ -41,6 +42,35 @@ export default function App() {
   const [meetingForCopilot, setMeetingForCopilot] = useState<Meeting | null>(null);
   const [isGuidedTourOpen, setIsGuidedTourOpen] = useState(false);
   const [companionInitialStall, setCompanionInitialStall] = useState<{ hall: string; stall: string } | undefined>(undefined);
+
+  // Centralized helper to close all overlapping modals
+  const closeAllModals = () => {
+    setIsRegisterModalOpen(false);
+    setIsConciergeModalOpen(false);
+    setSelectedExhibitorForModal(null);
+    setSelectedExhibitorForMeeting(null);
+    setMeetingForCopilot(null);
+  };
+
+  const handleOpenRegisterModal = () => {
+    closeAllModals();
+    setIsRegisterModalOpen(true);
+  };
+
+  const handleOpenExhibitorModal = (ex: Exhibitor) => {
+    closeAllModals();
+    setSelectedExhibitorForModal(ex);
+  };
+
+  const handleOpenBookMeeting = (ex: Exhibitor) => {
+    closeAllModals();
+    setSelectedExhibitorForMeeting(ex);
+  };
+
+  const handleOpenMeetingCopilot = (meeting: Meeting) => {
+    closeAllModals();
+    setMeetingForCopilot(meeting);
+  };
 
   // Notification Toast state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -77,6 +107,7 @@ export default function App() {
   };
 
   const handleOpenCompanionWithStall = (hall: string, stall: string) => {
+    closeAllModals();
     setCompanionInitialStall({ hall, stall });
     setCurrentTab('companion');
   };
@@ -87,15 +118,20 @@ export default function App() {
       <Header
         currentTab={currentTab}
         onSelectTab={(tab) => {
+          closeAllModals();
           setCurrentTab(tab);
           window.scrollTo({ top: 0 });
         }}
-        onOpenRegisterModal={() => setIsRegisterModalOpen(true)}
+        onOpenRegisterModal={handleOpenRegisterModal}
         onOpenConciergeModal={() => {
+          closeAllModals();
           setCurrentTab('concierge');
           window.scrollTo({ top: 0 });
         }}
-        onStartGuidedTour={() => setIsGuidedTourOpen(true)}
+        onStartGuidedTour={() => {
+          closeAllModals();
+          setIsGuidedTourOpen(true);
+        }}
       />
 
       {/* Main Content Router */}
@@ -103,10 +139,13 @@ export default function App() {
         {currentTab === 'home' && (
           <div>
             <HeroSection
-              onSelectTab={setCurrentTab}
-              onOpenRegisterModal={() => setIsRegisterModalOpen(true)}
-              onOpenExhibitorModal={(ex) => setSelectedExhibitorForModal(ex)}
-              onBookMeeting={(ex) => setSelectedExhibitorForMeeting(ex)}
+              onSelectTab={(tab) => {
+                closeAllModals();
+                setCurrentTab(tab);
+              }}
+              onOpenRegisterModal={handleOpenRegisterModal}
+              onOpenExhibitorModal={handleOpenExhibitorModal}
+              onBookMeeting={handleOpenBookMeeting}
             />
 
             {/* Quick Teaser for Sourcing Features */}
@@ -127,19 +166,28 @@ export default function App() {
 
                   <div className="flex flex-wrap items-center gap-3">
                     <button
-                      onClick={() => setCurrentTab('buyer-dashboard')}
+                      onClick={() => {
+                        closeAllModals();
+                        setCurrentTab('buyer-dashboard');
+                      }}
                       className="px-4 py-2 bg-[#E6005C] hover:bg-[#C2004D] text-white text-xs font-bold rounded-lg transition-colors cursor-pointer"
                     >
                       Buyer Dashboard
                     </button>
                     <button
-                      onClick={() => setCurrentTab('exhibitor-copilot')}
+                      onClick={() => {
+                        closeAllModals();
+                        setCurrentTab('exhibitor-copilot');
+                      }}
                       className="px-4 py-2 bg-[#EB8B2D] hover:bg-[#d67b22] text-white text-xs font-bold rounded-lg transition-colors cursor-pointer"
                     >
                       Exhibitor Copilot
                     </button>
                     <button
-                      onClick={() => setCurrentTab('command-center')}
+                      onClick={() => {
+                        closeAllModals();
+                        setCurrentTab('command-center');
+                      }}
                       className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg border border-slate-300 transition-colors cursor-pointer"
                     >
                       Organizer CRM
@@ -153,10 +201,13 @@ export default function App() {
 
         {currentTab === 'concierge' && (
           <AiConcierge
-            onOpenExhibitorModal={(ex) => setSelectedExhibitorForModal(ex)}
-            onBookMeeting={(ex) => setSelectedExhibitorForMeeting(ex)}
-            onOpenRegisterModal={() => setIsRegisterModalOpen(true)}
-            onNavigateToMeetings={() => setCurrentTab('meetings')}
+            onOpenExhibitorModal={handleOpenExhibitorModal}
+            onBookMeeting={handleOpenBookMeeting}
+            onOpenRegisterModal={handleOpenRegisterModal}
+            onNavigateToMeetings={() => {
+              closeAllModals();
+              setCurrentTab('meetings');
+            }}
           />
         )}
 
@@ -168,10 +219,16 @@ export default function App() {
             rfqs={rfqs}
             shortlist={shortlist}
             onToggleShortlist={handleToggleShortlist}
-            onOpenExhibitorModal={(ex) => setSelectedExhibitorForModal(ex)}
-            onBookMeeting={(ex) => setSelectedExhibitorForMeeting(ex)}
-            onOpenReverseRfqModal={() => setCurrentTab('matchmaking')}
-            onNavigateToMeetings={() => setCurrentTab('meetings')}
+            onOpenExhibitorModal={handleOpenExhibitorModal}
+            onBookMeeting={handleOpenBookMeeting}
+            onOpenReverseRfqModal={() => {
+              closeAllModals();
+              setCurrentTab('matchmaking');
+            }}
+            onNavigateToMeetings={() => {
+              closeAllModals();
+              setCurrentTab('meetings');
+            }}
           />
         )}
 
@@ -180,15 +237,15 @@ export default function App() {
             exhibitors={exhibitors}
             shortlist={shortlist}
             onToggleShortlist={handleToggleShortlist}
-            onOpenExhibitorModal={(ex) => setSelectedExhibitorForModal(ex)}
-            onBookMeeting={(ex) => setSelectedExhibitorForMeeting(ex)}
+            onOpenExhibitorModal={handleOpenExhibitorModal}
+            onBookMeeting={handleOpenBookMeeting}
           />
         )}
 
         {currentTab === 'matchmaking' && (
           <MatchmakingView
-            onOpenExhibitorModal={(ex) => setSelectedExhibitorForModal(ex)}
-            onBookMeeting={(ex) => setSelectedExhibitorForMeeting(ex)}
+            onOpenExhibitorModal={handleOpenExhibitorModal}
+            onBookMeeting={handleOpenBookMeeting}
             onSaveNewRfq={handleSaveNewRfq}
           />
         )}
@@ -197,22 +254,33 @@ export default function App() {
           <AgendaView
             meetings={meetings}
             onOpenCompanionWithStall={handleOpenCompanionWithStall}
-            onOpenMeetingCopilot={(meeting) => setMeetingForCopilot(meeting)}
+            onOpenMeetingCopilot={handleOpenMeetingCopilot}
           />
         )}
 
         {currentTab === 'companion' && (
           <FairCompanionView
             initialTargetStall={companionInitialStall}
-            onOpenExhibitorModal={(ex) => setSelectedExhibitorForModal(ex)}
-            onBookMeeting={(ex) => setSelectedExhibitorForMeeting(ex)}
+            onOpenExhibitorModal={handleOpenExhibitorModal}
+            onBookMeeting={handleOpenBookMeeting}
+          />
+        )}
+
+        {currentTab === 'fair-planner' && (
+          <BuyerTripPlannerView
+            onSelectTab={(tab) => {
+              closeAllModals();
+              setCurrentTab(tab);
+            }}
+            onOpenExhibitorModal={handleOpenExhibitorModal}
+            onBookMeeting={handleOpenBookMeeting}
           />
         )}
 
         {currentTab === 'exhibitor-copilot' && (
           <ExhibitorCopilotView
             onOpenMeetingCopilotForLead={(lead: LeadItem) => {
-              setMeetingForCopilot({
+              handleOpenMeetingCopilot({
                 id: `meet-lead-${lead.id}`,
                 exhibitorId: 'ex-1',
                 exhibitorName: 'ABC Textiles — Demo Exhibitor',
@@ -236,12 +304,15 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer onSelectTab={setCurrentTab} />
+      <Footer onSelectTab={(tab) => {
+        closeAllModals();
+        setCurrentTab(tab);
+      }} />
 
       {/* Floating Pink Chat Widget (Screenshot 5) */}
       <FloatingChatWidget 
-        onOpenExhibitorModal={(ex) => setSelectedExhibitorForModal(ex)}
-        onBookMeeting={(ex) => setSelectedExhibitorForMeeting(ex)}
+        onOpenExhibitorModal={handleOpenExhibitorModal}
+        onBookMeeting={handleOpenBookMeeting}
       />
 
       {/* Toast Notification */}
@@ -259,6 +330,7 @@ export default function App() {
         onClose={() => setIsRegisterModalOpen(false)}
         onCompleteRegistration={(profile) => {
           setBuyerProfile(profile);
+          closeAllModals();
           setCurrentTab('buyer-dashboard');
           showToast(`Welcome ${profile.name}! Your AI Buyer Profile is ready.`);
         }}
@@ -272,9 +344,10 @@ export default function App() {
         onClose={() => setSelectedExhibitorForModal(null)}
         onToggleShortlist={handleToggleShortlist}
         onBookMeeting={(ex) => {
-          setSelectedExhibitorForMeeting(ex);
+          handleOpenBookMeeting(ex);
         }}
         onSendRfq={(ex) => {
+          closeAllModals();
           setCurrentTab('matchmaking');
           showToast(`Prepared RFQ specification for ${ex.name}`);
         }}
@@ -302,12 +375,22 @@ export default function App() {
       {/* 5. Hero Guided Tour Modal */}
       <GuidedTourModal
         isOpen={isGuidedTourOpen}
-        onClose={() => setIsGuidedTourOpen(false)}
-        onSelectTab={setCurrentTab}
-        onOpenConciergeModal={() => setCurrentTab('concierge')}
-        onOpenExhibitorModal={(ex) => setSelectedExhibitorForModal(ex)}
-        onBookMeeting={(ex) => setSelectedExhibitorForMeeting(ex)}
-        onOpenMeetingCopilot={(meeting) => setMeetingForCopilot(meeting)}
+        onClose={() => {
+          closeAllModals();
+          setIsGuidedTourOpen(false);
+        }}
+        onCloseAllModals={closeAllModals}
+        onSelectTab={(tab) => {
+          closeAllModals();
+          setCurrentTab(tab);
+        }}
+        onOpenConciergeModal={() => {
+          closeAllModals();
+          setCurrentTab('concierge');
+        }}
+        onOpenExhibitorModal={handleOpenExhibitorModal}
+        onBookMeeting={handleOpenBookMeeting}
+        onOpenMeetingCopilot={handleOpenMeetingCopilot}
       />
     </div>
   );

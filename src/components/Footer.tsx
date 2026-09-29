@@ -37,6 +37,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab }) => {
             <ul className="space-y-1.5 text-slate-400 text-[11px]">
               <li><button onClick={() => onSelectTab('home')} className="hover:text-white cursor-pointer">Home</button></li>
               <li><button onClick={() => onSelectTab('buyer-dashboard')} className="hover:text-white cursor-pointer">Buyer Registration</button></li>
+              <li><button onClick={() => onSelectTab('fair-planner')} className="hover:text-white cursor-pointer font-bold text-amber-300">AI Fair & Trip Planner</button></li>
               <li><button onClick={() => onSelectTab('exhibitors')} className="hover:text-white cursor-pointer">Exhibitors Zone</button></li>
               <li><button onClick={() => onSelectTab('matchmaking')} className="hover:text-white cursor-pointer">AI Matchmaking</button></li>
               <li><button onClick={() => onSelectTab('companion')} className="hover:text-white cursor-pointer">Fair Companion & Map</button></li>
