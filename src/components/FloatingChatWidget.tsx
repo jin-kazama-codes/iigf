@@ -149,7 +149,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
   };
 
   return (
-    <div className="fixed bottom-6 left-6 z-40">
+    <div className="fixed bottom-6 right-6 z-40">
       {isOpen ? (
         <div className="bg-white dark:bg-slate-900 w-80 sm:w-96 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col h-[480px] overflow-hidden animate-slide-up">
           {/* Header */}
@@ -314,28 +314,15 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
           </div>
         </div>
       ) : (
-        /* Floating Pink Chat Bubble Button + Call Icon */
-        <div className="flex flex-col items-center gap-2">
-          {onOpenAiCaller && (
-            <button
-              onClick={onOpenAiCaller}
-              className="px-3 py-1.5 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-xl flex items-center gap-1.5 cursor-pointer transition-transform hover:scale-105 animate-bounce"
-              title="Speak with AI Voice Agent"
-            >
-              <PhoneCall className="w-3.5 h-3.5 text-slate-950" />
-              <span>AI Caller</span>
-            </button>
-          )}
-
-          <button
-            onClick={() => setIsOpen(true)}
-            className="w-13 h-13 rounded-full bg-[#E6005C] hover:bg-[#C2004D] text-white shadow-2xl flex items-center justify-center cursor-pointer transition-transform hover:scale-105 group"
-            aria-label="Open AI Assistant"
-          >
-            <MessageSquare className="w-6 h-6" />
-            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-400 border-2 border-white rounded-full" />
-          </button>
-        </div>
+        /* Floating Pink Chat Bubble Button */
+        <button
+          onClick={() => setIsOpen(true)}
+          className="w-13 h-13 rounded-full bg-[#E6005C] hover:bg-[#C2004D] text-white shadow-2xl flex items-center justify-center cursor-pointer transition-transform hover:scale-105 group relative"
+          aria-label="Open AI Assistant"
+        >
+          <MessageSquare className="w-6 h-6" />
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-400 border-2 border-white dark:border-slate-900 rounded-full" />
+        </button>
       )}
     </div>
   );
