@@ -919,41 +919,77 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
             </div>
           </div>
 
-          {/* ── MIDDLE: CONNECTING HORIZONTAL LINE OF PARTICLES ── */}
+          {/* ── CENTRAL CONNECTING PARTICLE WAVEFORM BRIDGE (FLOATING PARTICLES ONLY) ── */}
           <div
             style={{
               flex: 1,
-              height: 20,
+              height: 40,
               position: "relative",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              margin: "0 10px",
+              margin: "0 0px",
               zIndex: 2,
+              overflow: "hidden",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-                maxWidth: 240,
-                opacity: 0.65,
-              }}
-            >
-              {[...Array(14)].map((_, i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: i % 3 === 0 ? 3 : 2,
-                    height: i % 3 === 0 ? 3 : 2,
-                    borderRadius: "50%",
-                    backgroundColor: i % 2 === 0 ? "#38bdf8" : "#dfb74a",
-                    opacity: 0.45 + (Math.sin(i * 0.5) * 0.35),
-                  }}
-                />
-              ))}
+            {/* Dynamic floating audio particle dots */}
+            <div style={{ position: "relative", width: "100%", height: 30 }}>
+              {[...Array(24)].map((_, i) => {
+                const isSpeakingActive = isUserSpeaking || isAgentSpeaking;
+                const flowDirection = isUserSpeaking ? 1 : -1;
+                const pSize = i % 4 === 0 ? 2.5 : i % 2 === 0 ? 2.0 : 1.5;
+                const pColor = flowDirection > 0
+                  ? (isDark ? (i % 3 === 0 ? "#DFB74A" : "#F59E0B") : (i % 3 === 0 ? "#B45309" : "#D97706"))
+                  : (isDark ? (i % 3 === 0 ? "#38BDF8" : "#6366F1") : (i % 3 === 0 ? "#0284C7" : "#4338CA"));
+
+                return (
+                  <motion.div
+                    key={`${i}-${isUserSpeaking ? "user" : isAgentSpeaking ? "agent" : "idle"}`}
+                    initial={
+                      isSpeakingActive
+                        ? {
+                            left: flowDirection > 0 ? "0%" : "100%",
+                            opacity: 0,
+                            scale: 0.6,
+                          }
+                        : {
+                            left: `${(i / 24) * 100}%`,
+                            opacity: 0.35,
+                            scale: 1,
+                          }
+                    }
+                    animate={
+                      isSpeakingActive
+                        ? {
+                            left: flowDirection > 0 ? ["0%", "100%"] : ["100%", "0%"],
+                            y: [Math.sin(i * 0.7) * 5, Math.cos(i * 0.7) * -5, Math.sin(i * 0.7) * 5],
+                            opacity: [0, 0.85, 0.85, 0],
+                            scale: [0.7, 1.1, 0.7],
+                          }
+                        : {
+                            y: [Math.sin(i * 0.8) * 3, Math.cos(i * 0.8) * -3, Math.sin(i * 0.8) * 3],
+                            opacity: 0.35,
+                          }
+                    }
+                    transition={{
+                      repeat: Infinity,
+                      duration: 2.2,
+                      delay: isSpeakingActive ? (i / 24) * 2.2 : 0,
+                      ease: "linear",
+                    }}
+                    style={{
+                      position: "absolute",
+                      top: "45%",
+                      width: pSize,
+                      height: pSize,
+                      borderRadius: "50%",
+                      background: pColor,
+                      boxShadow: `0 0 4px ${pColor}`,
+                    }}
+                  />
+                );
+              })}
             </div>
           </div>
 
