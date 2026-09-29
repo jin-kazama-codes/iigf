@@ -18,7 +18,9 @@ import {
   Sparkles,
   MapPin,
   CheckCircle2,
-  Globe
+  Globe,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
 import { ThreeHolographicSphere } from "./ThreeHolographicSphere";
 import { useTheme } from "../context/ThemeContext";
@@ -606,6 +608,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [isFooterHovered, setIsFooterHovered] = useState(false);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const [isToolCardExpandedMobile, setIsToolCardExpandedMobile] = useState(false);
 
   // Live Mic Voice Call state
   const [isCalling, setIsCalling] = useState(false);
@@ -701,7 +704,6 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
     if (!voices || voices.length === 0) return null;
 
     if (lang === "ja") {
-      // Japanese (Kyoko, Otoya, Nanami, Google 日本語)
       return (
         voices.find(v => v.lang && v.lang.startsWith("ja") && v.name.includes("Natural")) ||
         voices.find(v => v.lang && v.lang.startsWith("ja") && (v.name.includes("Kyoko") || v.name.includes("Nanami") || v.name.includes("Google"))) ||
@@ -709,7 +711,6 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
         voices[0]
       );
     } else if (lang === "de") {
-      // German (Katja, Stefan, Google Deutsch)
       return (
         voices.find(v => v.lang && v.lang.startsWith("de") && v.name.includes("Natural")) ||
         voices.find(v => v.lang && v.lang.startsWith("de") && (v.name.includes("Katja") || v.name.includes("Google") || v.name.includes("Marlene"))) ||
@@ -717,7 +718,6 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
         voices[0]
       );
     } else if (lang === "fr") {
-      // French (Audrey, Thomas, Google Français)
       return (
         voices.find(v => v.lang && v.lang.startsWith("fr") && v.name.includes("Natural")) ||
         voices.find(v => v.lang && v.lang.startsWith("fr") && (v.name.includes("Audrey") || v.name.includes("Thomas") || v.name.includes("Google"))) ||
@@ -725,7 +725,6 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
         voices[0]
       );
     } else if (lang === "es") {
-      // Spanish (Monica, Jorge, Google Español)
       return (
         voices.find(v => v.lang && v.lang.startsWith("es") && v.name.includes("Natural")) ||
         voices.find(v => v.lang && v.lang.startsWith("es") && (v.name.includes("Monica") || v.name.includes("Google") || v.name.includes("Jorge"))) ||
@@ -733,7 +732,6 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
         voices[0]
       );
     } else if (lang === "ar") {
-      // Arabic (Laila, Maged, Google العربية)
       return (
         voices.find(v => v.lang && v.lang.startsWith("ar") && v.name.includes("Natural")) ||
         voices.find(v => v.lang && v.lang.startsWith("ar") && (v.name.includes("Laila") || v.name.includes("Maged") || v.name.includes("Google"))) ||
@@ -983,82 +981,114 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
   if (!isOpen) return null;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        background: "#07090D",
-        color: "#F8FAFC",
-        fontFamily: "'Inter', sans-serif",
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-        userSelect: "none",
-      }}
-    >
+    <div className="fixed inset-0 z-[9999] bg-[#07090D] text-[#F8FAFC] font-sans flex flex-col overflow-hidden select-none">
       {/* ── EXACT PHOTO BACKGROUND: DEEP OBSIDIAN WITH WARM GOLD BLEND AT BOTTOM ── */}
       <div
+        className="absolute inset-0 pointer-events-none"
         style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
           background: `radial-gradient(ellipse 120% 70% at 50% 100%, rgba(223, 183, 74, 0.38) 0%, rgba(223, 183, 74, 0.20) 35%, rgba(14, 16, 22, 0.85) 65%, #07090D 100%)`,
         }}
       />
       <div
+        className="absolute inset-0 pointer-events-none mix-blend-screen"
         style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
           background: `linear-gradient(180deg, #07090D 0%, #07090D 55%, rgba(7, 9, 13, 0.75) 75%, rgba(223, 183, 74, 0.22) 100%)`,
-          mixBlendMode: "screen",
         }}
       />
 
-      {/* ── TOP HEADER / CONTROLS (75th IIGF IDENTITY) ── */}
-      <header
-        style={{
-          position: "relative",
-          zIndex: 30,
-          padding: "14px 36px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          background: "transparent",
-          gap: 12,
-        }}
-      >
-        {/* Left: IIGF Brand Logo & Badge */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <img
-            src="https://www.indiaapparelfair.com/75th/img/logo.png"
-            alt="75th IIGF"
-            style={{ height: 30, width: "auto", objectFit: "contain", filter: "brightness(1.15)" }}
-            onError={(e) => { (e.target as HTMLElement).style.display = "none"; }}
-          />
-          <div style={{ borderLeft: "1px solid rgba(255, 255, 255, 0.18)", paddingLeft: 12 }}>
-            <span style={{ color: "#E6005C", fontSize: 11, fontWeight: 900, letterSpacing: "0.12em", textTransform: "uppercase", display: "block" }}>
-              75TH IIGF AI VOICE AGENT
-            </span>
-            <span style={{ color: "#94A3B8", fontSize: 9, fontWeight: 600 }}>
-              Autonomous Sourcing & Fair Concierge
-            </span>
+      {/* ── TOP HEADER / CONTROLS (RESPONSIVE) ── */}
+      <header className="relative z-30 px-3 sm:px-6 md:px-8 py-2.5 sm:py-3.5 bg-transparent border-b border-white/5 flex flex-col gap-2">
+        {/* Top Row: Brand & Core Actions */}
+        <div className="flex items-center justify-between gap-2">
+          {/* Brand Identity */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <img
+              src="https://www.indiaapparelfair.com/75th/img/logo.png"
+              alt="75th IIGF"
+              className="h-6 sm:h-8 w-auto object-contain brightness-115"
+              onError={(e) => { (e.target as HTMLElement).style.display = "none"; }}
+            />
+            <div className="border-l border-white/20 pl-2 sm:pl-3">
+              <span className="text-[#E6005C] text-[10px] sm:text-xs font-black tracking-wider uppercase block leading-tight">
+                75TH IIGF AI VOICE
+              </span>
+              <span className="text-slate-400 text-[8px] sm:text-[10px] font-semibold hidden xs:block">
+                Autonomous Sourcing Hub
+              </span>
+            </div>
+          </div>
+
+          {/* Top Right: Language Dropdown, Mute & Close Button */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Multilingual Delegation Language Picker */}
+            <div className="relative">
+              <button
+                onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
+                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-[#DFB74A]/40 bg-[#DFB74A]/10 text-[#DFB74A] cursor-pointer text-[10px] sm:text-xs font-bold transition-all hover:bg-[#DFB74A]/20"
+              >
+                <Globe className="w-3 h-3 text-[#DFB74A]" />
+                <span>{selectedLangObj.flag} <span className="hidden sm:inline">{selectedLangObj.label}</span></span>
+                <span className="text-[8px] opacity-70">▼</span>
+              </button>
+
+              {/* Dropdown Menu */}
+              {isLangDropdownOpen && (
+                <div className="absolute right-0 top-full mt-1.5 bg-[#0D1117] border border-[#DFB74A]/30 rounded-xl p-1 shadow-2xl z-50 w-52 backdrop-blur-xl animate-fadeIn">
+                  <div className="px-2.5 py-1.5 text-[9px] font-extrabold text-slate-400 tracking-wider uppercase border-b border-white/5 mb-1">
+                    IIGF Delegation Languages
+                  </div>
+                  {IIGF_LANGUAGES.map(langItem => (
+                    <button
+                      key={langItem.code}
+                      onClick={() => {
+                        setLanguage(langItem.code);
+                        setIsLangDropdownOpen(false);
+                        if (isPlaying) speakCurrentStep(currentStep, langItem.code);
+                      }}
+                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left text-xs transition-colors cursor-pointer ${
+                        language === langItem.code ? "bg-[#DFB74A]/20 text-[#DFB74A] font-bold" : "text-slate-300 hover:bg-white/5 font-medium"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span>{langItem.flag}</span>
+                        <span>{langItem.label}</span>
+                      </div>
+                      <span className="text-[9px] text-slate-500">{langItem.region.split(' ')[0]}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Mute/Unmute */}
+            <button
+              onClick={() => setIsAudioMuted(!isAudioMuted)}
+              title={isAudioMuted ? "Unmute Audio" : "Mute Audio"}
+              className="p-1.5 sm:p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white cursor-pointer"
+            >
+              {isAudioMuted ? <VolumeX className="w-3.5 h-3.5 text-rose-400" /> : <Volume2 className="w-3.5 h-3.5 text-slate-300" />}
+            </button>
+
+            {/* Close */}
+            <button
+              onClick={() => {
+                if (typeof window !== "undefined" && window.speechSynthesis) {
+                  try { window.speechSynthesis.cancel(); } catch {}
+                }
+                onClose();
+              }}
+              className="flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-[11px] sm:text-xs font-bold hover:bg-white/20 cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Close</span>
+            </button>
           </div>
         </div>
 
-        {/* Center: Scenario Switcher + Multilingual Delegation Picker + Mode */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+        {/* Sub Row: Scenario Tabs & Mode Switcher (Scrollable on small screens) */}
+        <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1 no-scrollbar">
           {/* Scenarios */}
-          <div
-            style={{
-              display: "flex",
-              background: "rgba(255, 255, 255, 0.04)",
-              padding: 3,
-              borderRadius: 10,
-              border: "1px solid rgba(255, 255, 255, 0.08)",
-            }}
-          >
+          <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl border border-white/10 shrink-0">
             {[
               { id: "sourcing", label: "B2B Sourcing", icon: Shirt },
               { id: "logistics", label: "VIP Logistics", icon: Building2 },
@@ -1070,135 +1100,27 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                 <button
                   key={tab.id}
                   onClick={() => handleSelectScenario(tab.id as any)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "6px 12px",
-                    borderRadius: 8,
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: "0.03em",
-                    background: isSelected ? "#DFB74A" : "transparent",
-                    color: isSelected ? "#07090D" : "#94A3B8",
-                    transition: "all 0.2s ease",
-                  }}
+                  className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                    isSelected ? "bg-[#DFB74A] text-slate-950 shadow-xs" : "text-slate-400 hover:text-white"
+                  }`}
                 >
-                  <Icon size={12} />
+                  <Icon className="w-3 h-3" />
                   <span>{tab.label}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* ── MULTILINGUAL DELEGATION LANGUAGE PICKER (7 IIGF LANGUAGES) ── */}
-          <div style={{ position: "relative" }}>
-            <button
-              onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "6px 12px",
-                borderRadius: 10,
-                border: "1px solid rgba(223, 183, 74, 0.4)",
-                background: "rgba(223, 183, 74, 0.12)",
-                color: "#DFB74A",
-                cursor: "pointer",
-                fontSize: 11,
-                fontWeight: 700,
-                transition: "all 0.2s ease",
-              }}
-            >
-              <Globe size={13} color="#DFB74A" />
-              <span>{selectedLangObj.flag} {selectedLangObj.label}</span>
-              <span style={{ fontSize: 9, opacity: 0.7 }}>▼</span>
-            </button>
-
-            {/* Dropdown Menu */}
-            {isLangDropdownOpen && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "100%",
-                  left: 0,
-                  marginTop: 6,
-                  background: "#0D1117",
-                  border: "1px solid rgba(223, 183, 74, 0.3)",
-                  borderRadius: 12,
-                  padding: 4,
-                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.8)",
-                  zIndex: 100,
-                  width: 220,
-                  backdropFilter: "blur(16px)",
-                }}
-              >
-                <div style={{ padding: "6px 8px 4px", fontSize: 9, fontWeight: 800, color: "#94A3B8", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                  Official IIGF Delegation Languages
-                </div>
-                {IIGF_LANGUAGES.map(langItem => (
-                  <button
-                    key={langItem.code}
-                    onClick={() => {
-                      setLanguage(langItem.code);
-                      setIsLangDropdownOpen(false);
-                      if (isPlaying) speakCurrentStep(currentStep, langItem.code);
-                    }}
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "7px 10px",
-                      borderRadius: 8,
-                      border: "none",
-                      cursor: "pointer",
-                      background: language === langItem.code ? "rgba(223, 183, 74, 0.2)" : "transparent",
-                      color: language === langItem.code ? "#DFB74A" : "#CBD5E1",
-                      textAlign: "left",
-                      fontSize: 11,
-                      fontWeight: language === langItem.code ? 700 : 500,
-                      transition: "all 0.15s ease",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span>{langItem.flag}</span>
-                      <span>{langItem.label}</span>
-                    </div>
-                    <span style={{ fontSize: 9, color: "#64748B" }}>{langItem.region.split(' ')[0]}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
           {/* Mode Switcher */}
-          <div
-            style={{
-              display: "flex",
-              background: "rgba(255, 255, 255, 0.04)",
-              padding: 3,
-              borderRadius: 10,
-              border: "1px solid rgba(255, 255, 255, 0.08)",
-            }}
-          >
+          <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl border border-white/10 shrink-0">
             <button
               onClick={() => {
                 if (isCalling) handleToggleLiveCall();
                 setActiveMode("simulation");
               }}
-              style={{
-                padding: "6px 12px",
-                borderRadius: 8,
-                border: "none",
-                cursor: "pointer",
-                fontSize: 11,
-                fontWeight: 600,
-                background: activeMode === "simulation" ? "rgba(223, 183, 74, 0.2)" : "transparent",
-                color: activeMode === "simulation" ? "#DFB74A" : "#64748B",
-              }}
+              className={`px-2.5 sm:px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer ${
+                activeMode === "simulation" ? "bg-[#DFB74A]/20 text-[#DFB74A]" : "text-slate-500 hover:text-slate-300"
+              }`}
             >
               Story Demo
             </button>
@@ -1210,163 +1132,43 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                 }
                 setActiveMode("live-voice");
               }}
-              style={{
-                padding: "6px 12px",
-                borderRadius: 8,
-                border: "none",
-                cursor: "pointer",
-                fontSize: 11,
-                fontWeight: 600,
-                background: activeMode === "live-voice" ? "rgba(0, 212, 255, 0.2)" : "transparent",
-                color: activeMode === "live-voice" ? "#00D4FF" : "#64748B",
-              }}
+              className={`px-2.5 sm:px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer ${
+                activeMode === "live-voice" ? "bg-cyan-500/20 text-cyan-400" : "text-slate-500 hover:text-slate-300"
+              }`}
             >
               Live Mic
             </button>
           </div>
         </div>
-
-        {/* Right Close & Audio Controls */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <button
-            onClick={() => setIsAudioMuted(!isAudioMuted)}
-            title={isAudioMuted ? "Unmute Audio" : "Mute Audio"}
-            style={{
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-              borderRadius: 8,
-              padding: 8,
-              color: isAudioMuted ? "#EF4444" : "#94A3B8",
-              cursor: "pointer",
-            }}
-          >
-            {isAudioMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
-          </button>
-
-          <button
-            onClick={() => {
-              if (typeof window !== "undefined" && window.speechSynthesis) {
-                try { window.speechSynthesis.cancel(); } catch {}
-              }
-              onClose();
-            }}
-            title="Close"
-            style={{
-              background: "rgba(255, 255, 255, 0.08)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
-              borderRadius: 8,
-              padding: "6px 14px",
-              color: "#E2E8F0",
-              cursor: "pointer",
-              fontSize: 11,
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-            }}
-          >
-            <X size={14} /> Close
-          </button>
-        </div>
       </header>
 
-      {/* ── MAIN STAGE: EXACT MATCH OF THE ATTACHED PHOTO ── */}
-      <main
+      {/* ── MAIN STAGE: RESPONSIVE 3D SPHERES & PARTICLE WAVE ── */}
+      <main 
         onClick={() => setIsLangDropdownOpen(false)}
-        style={{
-          flex: 1,
-          position: "relative",
-          zIndex: 10,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-          padding: "0 40px",
-        }}
+        className="flex-1 relative z-10 flex flex-col lg:flex-row items-center justify-center p-3 sm:p-6 md:p-8 overflow-y-auto no-scrollbar gap-4 lg:gap-8"
       >
-        {/* Center Spheres Container */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-            maxWidth: 1100,
-            position: "relative",
-            zIndex: 5,
-            margin: "0 auto",
-          }}
-        >
+        {/* Responsive Dual 3D Spheres & Central Particle Bridge */}
+        <div className="flex items-center justify-center w-full max-w-4xl relative z-5 mx-auto">
           {/* ── LEFT SPHERE: BUYER (GOLD) ── */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 12,
-              position: "relative",
-              zIndex: 5,
-              flexShrink: 0,
-            }}
-          >
-            <div
-              style={{
-                position: "relative",
-                width: 360,
-                height: 360,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+          <div className="flex flex-col items-center gap-2 sm:gap-3 relative z-5 shrink-0">
+            <div className="relative w-28 h-28 xs:w-36 xs:h-36 sm:w-52 sm:h-52 md:w-68 md:h-68 lg:w-76 lg:h-76 xl:w-84 xl:h-84 flex items-center justify-center">
               <ThreeHolographicSphere variant="gold" isSpeaking={Boolean(isUserSpeaking)} isDark={true} />
             </div>
 
             {/* Label Below Left Sphere: BUYER / CALLING IN */}
-            <div style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  color: "#DFB74A",
-                  fontSize: 14,
-                  fontWeight: 800,
-                  letterSpacing: "0.22em",
-                  textTransform: "uppercase",
-                  fontFamily: "'Outfit', 'Montserrat', sans-serif",
-                }}
-              >
+            <div className="text-center">
+              <div className="text-[#DFB74A] text-xs sm:text-sm md:text-base font-black tracking-widest uppercase font-mono">
                 {currentStep.speakerLabels[language] || "BUYER"}
               </div>
-              <div
-                style={{
-                  color: "#94A3B8",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  marginTop: 4,
-                }}
-              >
+              <div className="text-slate-400 text-[9px] sm:text-[11px] font-bold tracking-wider uppercase mt-0.5">
                 {isUserSpeaking ? "SPEAKING..." : currentStep.statusBadges[language] || "CALLING IN"}
               </div>
             </div>
           </div>
 
-          {/* ── CENTRAL CONNECTING PARTICLE WAVEFORM BRIDGE (FLOATING PARTICLES ONLY) ── */}
-          <div
-            style={{
-              flex: 1,
-              height: 40,
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "0 0px",
-              zIndex: 2,
-              overflow: "hidden",
-            }}
-          >
-            {/* Dynamic floating audio particle dots */}
-            <div style={{ position: "relative", width: "100%", height: 30 }}>
+          {/* ── CENTRAL CONNECTING PARTICLE WAVEFORM BRIDGE ── */}
+          <div className="flex-1 h-8 sm:h-12 relative flex items-center justify-center mx-1 sm:mx-3 z-2 overflow-hidden">
+            <div className="relative w-full h-6 sm:h-8">
               {[...Array(24)].map((_, i) => {
                 const isSpeakingActive = isUserSpeaking || isAgentSpeaking;
                 const flowDirection = isUserSpeaking ? 1 : -1;
@@ -1395,12 +1197,12 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                       isSpeakingActive
                         ? {
                             left: flowDirection > 0 ? ["0%", "100%"] : ["100%", "0%"],
-                            y: [Math.sin(i * 0.7) * 5, Math.cos(i * 0.7) * -5, Math.sin(i * 0.7) * 5],
+                            y: [Math.sin(i * 0.7) * 4, Math.cos(i * 0.7) * -4, Math.sin(i * 0.7) * 4],
                             opacity: [0, 0.85, 0.85, 0],
                             scale: [0.7, 1.1, 0.7],
                           }
                         : {
-                            y: [Math.sin(i * 0.8) * 3, Math.cos(i * 0.8) * -3, Math.sin(i * 0.8) * 3],
+                            y: [Math.sin(i * 0.8) * 2.5, Math.cos(i * 0.8) * -2.5, Math.sin(i * 0.8) * 2.5],
                             opacity: 0.35,
                           }
                     }
@@ -1426,237 +1228,146 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
           </div>
 
           {/* ── RIGHT SPHERE: SERALI (CYAN) ── */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 12,
-              position: "relative",
-              zIndex: 5,
-              flexShrink: 0,
-            }}
-          >
-            <div
-              style={{
-                position: "relative",
-                width: 360,
-                height: 360,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+          <div className="flex flex-col items-center gap-2 sm:gap-3 relative z-5 shrink-0">
+            <div className="relative w-28 h-28 xs:w-36 xs:h-36 sm:w-52 sm:h-52 md:w-68 md:h-68 lg:w-76 lg:h-76 xl:w-84 xl:h-84 flex items-center justify-center">
               <ThreeHolographicSphere variant="cyan" isSpeaking={Boolean(isAgentSpeaking)} isDark={true} />
             </div>
 
             {/* Label Below Right Sphere: SERALI / CONNECTED */}
-            <div style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  color: "#38bdf8",
-                  fontSize: 14,
-                  fontWeight: 800,
-                  letterSpacing: "0.22em",
-                  textTransform: "uppercase",
-                  fontFamily: "'Outfit', 'Montserrat', sans-serif",
-                }}
-              >
+            <div className="text-center">
+              <div className="text-[#38BDF8] text-xs sm:text-sm md:text-base font-black tracking-widest uppercase font-mono">
                 {currentStep.speakerLabels[language] === "BUYER" ? "SERALI" : (currentStep.speakerLabels[language] || "SERALI")}
               </div>
-              <div
-                style={{
-                  color: "#94A3B8",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  marginTop: 4,
-                }}
-              >
+              <div className="text-slate-400 text-[9px] sm:text-[11px] font-bold tracking-wider uppercase mt-0.5">
                 {isAgentSpeaking ? "ANSWERING..." : "CONNECTED"}
               </div>
             </div>
           </div>
         </div>
 
-        {/* ── FLOATING TOOL CARD ON THE RIGHT ── */}
-        <div
-          style={{
-            position: "absolute",
-            right: 48,
-            top: "50%",
-            transform: "translateY(-50%)",
-            width: 350,
-            zIndex: 20,
-            pointerEvents: "auto",
-          }}
-        >
+        {/* ── RESPONSIVE FLOATING TOOL ACTION CARD ── */}
+        <div className="w-full max-w-sm lg:w-[340px] z-20 pointer-events-auto">
           <AnimatePresence mode="wait">
             {currentStep.toolAction && (
               <motion.div
                 key={`${scenarioKey}-${stepIndex}-${currentStep.toolAction.title}`}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 10 }}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
-                style={{
-                  background: "rgba(10, 19, 30, 0.82)",
-                  border: "1px solid rgba(56, 189, 248, 0.25)",
-                  boxShadow: "0 20px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.1)",
-                  borderRadius: 16,
-                  padding: "20px 24px",
-                  backdropFilter: "blur(20px)",
-                }}
+                className="bg-[#0A131E]/90 border border-sky-400/30 rounded-2xl p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl"
               >
-                {/* Header */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <Calendar size={14} color="#38bdf8" />
-                    <span style={{ color: "#38bdf8", fontSize: 13, fontWeight: 700 }}>
+                {/* Header with Mobile Expand Toggle */}
+                <div 
+                  onClick={() => setIsToolCardExpandedMobile(!isToolCardExpandedMobile)}
+                  className="flex items-center justify-between gap-2 cursor-pointer select-none"
+                >
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-sky-400" />
+                    <span className="text-sky-300 text-xs sm:text-sm font-bold">
                       {currentStep.toolAction.title}
                     </span>
                   </div>
-                  <span style={{ color: "#64748B", fontSize: 11, fontWeight: 500 }}>
-                    {currentStep.toolAction.subtitle || "75th IIGF AI"}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-slate-500 text-[10px] font-medium hidden xs:inline">
+                      {currentStep.toolAction.subtitle || "75th IIGF AI"}
+                    </span>
+                    <button className="lg:hidden text-slate-400 p-0.5">
+                      {isToolCardExpandedMobile ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
                 </div>
 
-                {/* Fields */}
-                {currentStep.toolAction.crmFields && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {currentStep.toolAction.crmFields.map((field, fIdx) => (
-                      <div key={fIdx}>
-                        <div style={{ color: "#64748B", fontSize: 9.5, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 3 }}>
-                          {field.label}
+                {/* Expanded content (Always open on lg+, toggleable on mobile to save vertical space) */}
+                <div className={`mt-3 space-y-2.5 text-xs ${!isToolCardExpandedMobile ? "hidden lg:block" : "block"}`}>
+                  {/* CRM Fields */}
+                  {currentStep.toolAction.crmFields && (
+                    <div className="space-y-1.5">
+                      {currentStep.toolAction.crmFields.map((field, fIdx) => (
+                        <div key={fIdx} className="bg-white/5 p-2 rounded-lg border border-white/5">
+                          <div className="text-slate-400 text-[9px] font-extrabold tracking-wider uppercase">
+                            {field.label}
+                          </div>
+                          <div className={`text-xs font-semibold mt-0.5 ${field.highlight ? "text-[#DFB74A]" : "text-white"}`}>
+                            {field.value}
+                          </div>
                         </div>
-                        <div
-                          style={{
-                            color: field.highlight ? "#DFB74A" : "#F8FAFC",
-                            fontSize: 13,
-                            fontWeight: field.highlight ? 700 : 500,
-                            lineHeight: 1.35,
-                          }}
-                        >
-                          {field.value}
-                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Doctor/Exhibitor Header & Slots */}
+                  {currentStep.toolAction.doctorName && (
+                    <div className="pt-1">
+                      <div className="text-white text-xs font-bold">
+                        {currentStep.toolAction.doctorName}
                       </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Doctor/Exhibitor Header & Slots */}
-                {currentStep.toolAction.doctorName && (
-                  <div style={{ marginTop: 8 }}>
-                    <div style={{ color: "#F8FAFC", fontSize: 13, fontWeight: 800 }}>
-                      {currentStep.toolAction.doctorName}
+                      <div className="text-sky-400 text-[10px] font-bold uppercase mt-0.5">
+                        {currentStep.toolAction.specialty}
+                      </div>
                     </div>
-                    <div style={{ color: "#38bdf8", fontSize: 10, fontWeight: 800, textTransform: "uppercase", marginTop: 2 }}>
-                      {currentStep.toolAction.specialty}
-                    </div>
-                  </div>
-                )}
+                  )}
 
-                {currentStep.toolAction.slots && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 10 }}>
-                    {currentStep.toolAction.slots.map((slot, sIdx) => {
-                      const isSelected = slot.status === "selected";
-                      const isBooked = slot.status === "booked";
-                      return (
-                        <div
-                          key={sIdx}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            padding: "8px 12px",
-                            borderRadius: 8,
-                            background: isBooked
-                              ? "rgba(0, 150, 120, 0.25)"
-                              : isSelected
-                                ? "rgba(223, 183, 74, 0.2)"
-                                : "rgba(255, 255, 255, 0.03)",
-                            border: isBooked
-                              ? "1px solid rgba(0, 150, 120, 0.5)"
-                              : isSelected
-                                ? "1px solid rgba(223, 183, 74, 0.6)"
-                                : "1px solid rgba(255, 255, 255, 0.05)",
-                          }}
-                        >
-                          <span style={{ color: isSelected || isBooked ? "#FFFFFF" : "#CBD5E1", fontSize: 11, fontWeight: 700 }}>
-                            <span style={{ color: "#38bdf8", marginRight: 6 }}>{slot.time}</span> {slot.label}
-                          </span>
-                          <span
-                            style={{
-                              color: isBooked ? "#00E5A3" : isSelected ? "#DFB74A" : "#64748B",
-                              fontSize: 9,
-                              fontWeight: 800,
-                            }}
+                  {currentStep.toolAction.slots && (
+                    <div className="space-y-1 pt-1">
+                      {currentStep.toolAction.slots.map((slot, sIdx) => {
+                        const isSelected = slot.status === "selected";
+                        const isBooked = slot.status === "booked";
+                        return (
+                          <div
+                            key={sIdx}
+                            className={`flex items-center justify-between p-2 rounded-lg text-xs font-bold transition-all ${
+                              isBooked
+                                ? "bg-emerald-950/60 border border-emerald-500/50 text-emerald-300"
+                                : isSelected
+                                  ? "bg-[#DFB74A]/20 border border-[#DFB74A] text-white"
+                                  : "bg-white/5 border border-white/5 text-slate-300"
+                            }`}
                           >
-                            {slot.badge || "FREE"}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                            <span>
+                              <span className="text-sky-400 mr-1.5">{slot.time}</span> {slot.label}
+                            </span>
+                            <span className={`text-[9px] font-extrabold ${isBooked ? "text-emerald-400" : isSelected ? "text-[#DFB74A]" : "text-slate-500"}`}>
+                              {slot.badge || "FREE"}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
 
-                {/* WhatsApp Message */}
-                {currentStep.toolAction.whatsappMessage && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 8 }}>
-                    <div style={{ color: "#64748B", fontSize: 10, fontWeight: 700 }}>
-                      To: {currentStep.toolAction.whatsappMessage.to}
+                  {/* WhatsApp Message */}
+                  {currentStep.toolAction.whatsappMessage && (
+                    <div className="bg-emerald-950/40 border border-emerald-500/30 p-2.5 rounded-lg space-y-1">
+                      <div className="text-emerald-400 text-[10px] font-bold">
+                        To: {currentStep.toolAction.whatsappMessage.to}
+                      </div>
+                      <p className="text-slate-200 text-[11px] leading-relaxed">
+                        {currentStep.toolAction.whatsappMessage.text}
+                      </p>
+                      <div className="text-right text-emerald-400 text-[9px] font-black">
+                        ✓✓ DELIVERED
+                      </div>
                     </div>
-                    <div
-                      style={{
-                        background: "rgba(0, 150, 120, 0.15)",
-                        borderLeft: "2px solid #00E5A3",
-                        padding: "8px 10px",
-                        borderRadius: 4,
-                        color: "#E2E8F0",
-                        fontSize: 10,
-                        lineHeight: 1.4,
-                      }}
-                    >
-                      {currentStep.toolAction.whatsappMessage.text}
-                    </div>
-                    <div style={{ textAlign: "right", color: "#00E5A3", fontSize: 8, fontWeight: 800 }}>
-                      ✓✓ DELIVERED
-                    </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </main>
 
-      {/* ── BOTTOM TRANSCRIPTION BAR ── */}
-      <footer
+      {/* ── BOTTOM TRANSCRIPTION & PLAYBACK BAR (RESPONSIVE) ── */}
+      <footer 
         onMouseEnter={() => setIsFooterHovered(true)}
         onMouseLeave={() => setIsFooterHovered(false)}
-        style={{
-          position: "relative",
-          zIndex: 20,
-          padding: "24px 64px 36px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 12,
-        }}
+        className="relative z-20 px-4 sm:px-8 md:px-12 py-3 sm:py-5 border-t border-white/10 bg-[#07090D]/90 backdrop-blur-lg flex flex-col gap-2.5"
       >
-        <div style={{ maxWidth: 960 }}>
+        <div className="w-full max-w-4xl mx-auto">
           {/* Speaker Tag in Gold or Cyan */}
-          <div
-            style={{
-              color: currentStep.speakerType === "user" ? "#DFB74A" : "#38bdf8",
-              fontSize: 12,
-              fontWeight: 800,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              fontFamily: "'Outfit', 'Montserrat', sans-serif",
-              marginBottom: 8,
-            }}
-          >
+          <div className={`text-[10px] sm:text-xs font-black tracking-widest uppercase font-mono mb-1 ${
+            currentStep.speakerType === "user" ? "text-[#DFB74A]" : "text-sky-400"
+          }`}>
             {activeSpeakerLabel}
           </div>
 
@@ -1664,53 +1375,27 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
           <AnimatePresence mode="wait">
             <motion.div
               key={`${scenarioKey}-${stepIndex}-${language}`}
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.25 }}
             >
-              <div
-                style={{
-                  color: "#FFFFFF",
-                  fontSize: 24,
-                  fontWeight: 500,
-                  lineHeight: 1.4,
-                  fontFamily: "'Inter', sans-serif",
-                }}
-              >
+              <div className="text-white text-sm sm:text-lg md:text-xl font-medium leading-relaxed">
                 {activeMainText}
               </div>
 
               {/* Subtitle Translation in Italic */}
-              <div
-                style={{
-                  color: "#94A3B8",
-                  fontSize: 14,
-                  fontStyle: "italic",
-                  marginTop: 8,
-                  lineHeight: 1.4,
-                }}
-              >
+              <div className="text-slate-400 text-xs sm:text-sm italic mt-1 leading-snug">
                 {activeTranslationText}
               </div>
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Hover Controls (Play / Pause / Next / Seek) */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            maxWidth: 960,
-            paddingTop: 8,
-            opacity: isFooterHovered ? 1 : 0.4,
-            transition: "opacity 0.3s ease",
-          }}
-        >
-          {/* Step Dots */}
-          <div style={{ display: "flex", gap: 6 }}>
+        {/* Playback Controls & Progress Bar */}
+        <div className="w-full max-w-4xl mx-auto flex items-center justify-between gap-2 pt-1">
+          {/* Step Progress Indicators */}
+          <div className="flex items-center gap-1 sm:gap-1.5">
             {steps.map((s, idx) => (
               <button
                 key={s.step}
@@ -1718,22 +1403,21 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   setStepIndex(idx);
                   setIsPlaying(false);
                 }}
-                style={{
-                  width: idx === stepIndex ? 28 : 14,
-                  height: 4,
-                  borderRadius: 2,
-                  border: "none",
-                  cursor: "pointer",
-                  background: idx === stepIndex ? "#DFB74A" : idx < stepIndex ? "rgba(223, 183, 74, 0.4)" : "rgba(255, 255, 255, 0.15)",
-                  transition: "all 0.2s ease",
-                }}
+                className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                  idx === stepIndex 
+                    ? "w-5 sm:w-7 bg-[#DFB74A]" 
+                    : idx < stepIndex 
+                      ? "w-2.5 sm:w-3.5 bg-[#DFB74A]/40" 
+                      : "w-2.5 sm:w-3.5 bg-white/20"
+                }`}
+                aria-label={`Go to step ${s.step}`}
               />
             ))}
           </div>
 
-          {/* Playback Controls */}
+          {/* Control Buttons */}
           {activeMode === "simulation" ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 onClick={() => {
                   if (stepIndex > 0) {
@@ -1742,16 +1426,10 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   }
                 }}
                 disabled={stepIndex === 0}
-                style={{
-                  background: "rgba(255, 255, 255, 0.05)",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  borderRadius: 8,
-                  padding: "6px 10px",
-                  color: stepIndex === 0 ? "#64748B" : "#CBD5E1",
-                  cursor: stepIndex === 0 ? "not-allowed" : "pointer",
-                }}
+                className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-300 disabled:opacity-30 cursor-pointer"
+                title="Previous Line"
               >
-                <ChevronLeft size={14} />
+                <ChevronLeft className="w-4 h-4" />
               </button>
 
               <button
@@ -1761,22 +1439,9 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   }
                   setIsPlaying(!isPlaying);
                 }}
-                style={{
-                  background: "#DFB74A",
-                  color: "#07090D",
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "8px 18px",
-                  cursor: "pointer",
-                  fontWeight: 900,
-                  fontSize: 11,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  letterSpacing: "0.08em",
-                }}
+                className="px-3 sm:px-4 py-1.5 bg-[#DFB74A] hover:bg-[#c9a33e] text-slate-950 font-black text-xs rounded-lg shadow-md flex items-center gap-1.5 cursor-pointer transition-transform active:scale-95"
               >
-                {isPlaying ? <><Pause size={13} /> PAUSE</> : <><Play size={13} /> PLAY DEMO</>}
+                {isPlaying ? <><Pause className="w-3.5 h-3.5" /> <span className="hidden xs:inline">PAUSE</span></> : <><Play className="w-3.5 h-3.5 fill-current" /> <span className="hidden xs:inline">PLAY DEMO</span></>}
               </button>
 
               <button
@@ -1787,16 +1452,10 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   }
                 }}
                 disabled={stepIndex === steps.length - 1}
-                style={{
-                  background: "rgba(255, 255, 255, 0.05)",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  borderRadius: 8,
-                  padding: "6px 10px",
-                  color: stepIndex === steps.length - 1 ? "#64748B" : "#CBD5E1",
-                  cursor: stepIndex === steps.length - 1 ? "not-allowed" : "pointer",
-                }}
+                className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-300 disabled:opacity-30 cursor-pointer"
+                title="Next Line"
               >
-                <ChevronRight size={14} />
+                <ChevronRight className="w-4 h-4" />
               </button>
 
               <button
@@ -1804,44 +1463,22 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   setStepIndex(0);
                   setIsPlaying(true);
                 }}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "#94A3B8",
-                  cursor: "pointer",
-                  fontSize: 11,
-                  fontWeight: 600,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  marginLeft: 8,
-                }}
+                className="p-1.5 sm:px-2.5 rounded-lg text-slate-400 hover:text-white text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                title="Restart"
               >
-                <RefreshCw size={12} /> Restart
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span className="hidden md:inline">Restart</span>
               </button>
             </div>
           ) : (
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <button
-                onClick={handleToggleLiveCall}
-                style={{
-                  background: isCalling ? "#EF4444" : "#00D4FF",
-                  color: "#07090D",
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "8px 20px",
-                  cursor: "pointer",
-                  fontWeight: 900,
-                  fontSize: 11,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  letterSpacing: "0.08em",
-                }}
-              >
-                {isCalling ? <><PhoneOff size={14} /> END CALL</> : <><PhoneCall size={14} /> START LIVE CALL</>}
-              </button>
-            </div>
+            <button
+              onClick={handleToggleLiveCall}
+              className={`px-4 py-1.5 rounded-xl font-black text-xs text-slate-950 flex items-center gap-2 shadow-lg transition-all cursor-pointer ${
+                isCalling ? "bg-rose-500 hover:bg-rose-600 text-white" : "bg-cyan-400 hover:bg-cyan-300"
+              }`}
+            >
+              {isCalling ? <><PhoneOff className="w-3.5 h-3.5" /> <span>END CALL</span></> : <><PhoneCall className="w-3.5 h-3.5" /> <span>START LIVE CALL</span></>}
+            </button>
           )}
         </div>
       </footer>
