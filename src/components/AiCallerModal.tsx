@@ -17,10 +17,31 @@ import {
   Languages,
   Sparkles,
   MapPin,
-  CheckCircle2
+  CheckCircle2,
+  Globe
 } from "lucide-react";
 import { ThreeHolographicSphere } from "./ThreeHolographicSphere";
 import { useTheme } from "../context/ThemeContext";
+
+export type SupportedLanguage = "en" | "hi" | "ja" | "de" | "fr" | "es" | "ar";
+
+export interface LanguageOption {
+  code: SupportedLanguage;
+  label: string;
+  flag: string;
+  region: string;
+  bcp47: string;
+}
+
+export const IIGF_LANGUAGES: LanguageOption[] = [
+  { code: "en", label: "English", flag: "🇬🇧", region: "Global / UK / USA", bcp47: "en-GB" },
+  { code: "hi", label: "हिंदी", flag: "🇮🇳", region: "India & South Asia", bcp47: "hi-IN" },
+  { code: "ja", label: "日本語", flag: "🇯🇵", region: "Japan (Tokyo Delegation)", bcp47: "ja-JP" },
+  { code: "de", label: "Deutsch", flag: "🇩🇪", region: "Germany & Central Europe", bcp47: "de-DE" },
+  { code: "fr", label: "Français", flag: "🇫🇷", region: "France & Luxury Retail", bcp47: "fr-FR" },
+  { code: "es", label: "Español", flag: "🇪🇸", region: "Spain & Latin America", bcp47: "es-ES" },
+  { code: "ar", label: "العربية", flag: "🇦🇪", region: "UAE & GCC Sourcing", bcp47: "ar-SA" },
+];
 
 export interface ToolActionData {
   toolType: "calendar" | "crm" | "whatsapp" | "banking" | "triage";
@@ -36,14 +57,11 @@ export interface ToolActionData {
 
 export interface DemoStep {
   step: number;
-  statusBadgeEn: string;
-  statusBadgeHi: string;
   speaker: "Buyer" | "Serali";
-  speakerLabelEn: string;
-  speakerLabelHi: string;
   speakerType: "user" | "agent";
-  textEn: string;
-  textHi: string;
+  text: Record<SupportedLanguage, string>;
+  speakerLabels: Record<SupportedLanguage, string>;
+  statusBadges: Record<SupportedLanguage, string>;
   toolAction?: ToolActionData;
 }
 
@@ -51,14 +69,35 @@ export interface DemoStep {
 const SOURCING_STEPS: DemoStep[] = [
   {
     step: 1,
-    statusBadgeEn: "CALLING IN",
-    statusBadgeHi: "कॉलिंग इन",
     speaker: "Buyer",
-    speakerLabelEn: "BUYER",
-    speakerLabelHi: "BUYER",
     speakerType: "user",
-    textEn: "Hello IIGF Support! I am a UK retail buyer looking for certified organic cotton knitwear with low MOQ below 500 pieces for SS27.",
-    textHi: "नमस्ते आई.आई.जी.एफ सपोर्ट! मैं यूके से एक खरीदार हूं और मुझे 500 से कम MOQ में 100% ऑर्गेनिक कॉटन निटवियर निर्माता चाहिए।",
+    speakerLabels: {
+      en: "BUYER",
+      hi: "BUYER",
+      ja: "バイヤー",
+      de: "EINKÄUFER",
+      fr: "ACHETEUR",
+      es: "COMPRADOR",
+      ar: "المشتري"
+    },
+    statusBadges: {
+      en: "CALLING IN",
+      hi: "कॉलिंग इन",
+      ja: "発信中",
+      de: "ANRUF",
+      fr: "APPEL EN COURS",
+      es: "LLAMANDO",
+      ar: "جارٍ الاتصال"
+    },
+    text: {
+      en: "Hello IIGF Support! I am a UK retail buyer looking for certified organic cotton knitwear with low MOQ below 500 pieces for SS27.",
+      hi: "नमस्ते आई.आई.जी.एफ सपोर्ट! मैं यूके से एक खरीदार हूं और मुझे 500 से कम MOQ में 100% ऑर्गेनिक कॉटन निटवियर निर्माता चाहिए।",
+      ja: "こんにちは、IIGFサポート！SS27向けにMOQ 500枚以下の認証オーガニックコットンニットを探している英国のバイヤーです。",
+      de: "Hallo IIGF Support! Ich bin Einkäufer aus Großbritannien und suche zertifizierte Bio-Baumwoll-Strickwaren mit niedriger MOQ unter 500 Stück.",
+      fr: "Bonjour l'assistance IIGF ! Je suis un acheteur britannique à la recherche de tricots en coton biologique certifié avec un faible MOQ de moins de 500 pièces.",
+      es: "¡Hola soporte de IIGF! Soy un comprador minorista del Reino Unido que busca prendas de punto de algodón orgánico con MOQ inferior a 500 unidades.",
+      ar: "مرحباً بدعم IIGF! أنا مشتري تجزئة بريطاني أبحث عن ملابس تريكو قطنية عضوية معتمدة بحد أدنى للطلب أقل من 500 قطعة."
+    },
     toolAction: {
       toolType: "triage",
       title: "AI Multimodal Sourcing Triage",
@@ -73,14 +112,35 @@ const SOURCING_STEPS: DemoStep[] = [
   },
   {
     step: 2,
-    statusBadgeEn: "CONNECTED",
-    statusBadgeHi: "कनेक्टेड",
     speaker: "Serali",
-    speakerLabelEn: "SERALI",
-    speakerLabelHi: "SERALI",
     speakerType: "agent",
-    textEn: "Namaste Sarah, welcome to the 75th India International Garment Fair. I have matched you with ABC Textiles at Hall 2, Stall B-17, who specialize in GOTS single jersey knits with MOQ 300.",
-    textHi: "नमस्ते सारा, 75वें इंडिया इंटरनेशनल गारमेंट फेयर में आपका स्वागत है। मैंने आपको हॉल 2, स्टॉल B-17 पर ABC टेक्सटाइल्स से मैच किया है, जो 300 MOQ में ऑर्गेनिक निट्स बनाते हैं।",
+    speakerLabels: {
+      en: "SERALI",
+      hi: "SERALI",
+      ja: "セラリ",
+      de: "SERALI",
+      fr: "SERALI",
+      es: "SERALI",
+      ar: "سيرالي"
+    },
+    statusBadges: {
+      en: "CONNECTED",
+      hi: "कनेक्टेड",
+      ja: "接続中",
+      de: "VERBUNDEN",
+      fr: "CONNECTÉ",
+      es: "CONECTADO",
+      ar: "متصل"
+    },
+    text: {
+      en: "Namaste Sarah, welcome to the 75th India International Garment Fair. I have matched you with ABC Textiles at Hall 2, Stall B-17, who specialize in GOTS single jersey knits with MOQ 300.",
+      hi: "नमस्ते सारा, 75वें इंडिया इंटरनेशनल गारमेंट फेयर में आपका स्वागत है। मैंने आपको हॉल 2, स्टॉल B-17 पर ABC टेक्सटाइल्स से मैच किया है, जो 300 MOQ में ऑर्गेनिक निट्स बनाते हैं।",
+      ja: "ナマステ、サラ様。第75回IIGFへようこそ。ホール2、ブースB-17のABCテキスタイル（MOQ 300のGOTSジャージー専門）とマッチングしました。",
+      de: "Namaste Sarah, willkommen zur 75. IIGF. Ich habe Sie mit ABC Textiles in Halle 2, Stand B-17 gematcht – spezialisiert auf GOTS-Jersey mit MOQ 300.",
+      fr: "Namasté Sarah, bienvenue à la 75e IIGF. Je vous ai associée à ABC Textiles, Hall 2, Stand B-17, spécialiste du jersey GOTS avec un MOQ de 300.",
+      es: "Namaste Sarah, bienvenida a la 75ª IIGF. Te he emparejado con ABC Textiles en el Hall 2, Stand B-17, especializados en punto GOTS con MOQ 300.",
+      ar: "نمستي سارة، مرحباً بك في المعرض الدولي الـ75 للملابس. لقد قمت بربطك مع شركة ABC Textiles في القاعة 2، الجناح B-17، المتخصصة في أقمشة GOTS بحد أدنى 300 قطعة."
+    },
     toolAction: {
       toolType: "crm",
       title: "Exhibitor Dossier & Audit",
@@ -95,14 +155,35 @@ const SOURCING_STEPS: DemoStep[] = [
   },
   {
     step: 3,
-    statusBadgeEn: "SLOT QUERY",
-    statusBadgeHi: "स्लॉट जांच",
     speaker: "Buyer",
-    speakerLabelEn: "BUYER",
-    speakerLabelHi: "BUYER",
     speakerType: "user",
-    textEn: "That sounds ideal. Can you book a 30-minute private meeting with their export director on the opening day, 14th July around 11:30 AM?",
-    textHi: "यह बिल्कुल सही है! क्या आप 14 जुलाई को सुबह 11:30 बजे उनके एक्सपोर्ट डायरेक्टर के साथ मेरी 30 मिनट की मीटिंग बुक कर सकती हैं?",
+    speakerLabels: {
+      en: "BUYER",
+      hi: "BUYER",
+      ja: "バイヤー",
+      de: "EINKÄUFER",
+      fr: "ACHETEUR",
+      es: "COMPRADOR",
+      ar: "المشتري"
+    },
+    statusBadges: {
+      en: "SLOT QUERY",
+      hi: "स्लॉट जांच",
+      ja: "スロット照会",
+      de: "TERMINANFRAGE",
+      fr: "DEMANDE CRÉNEAU",
+      es: "CONSULTA HORARIO",
+      ar: "استفسار الموعد"
+    },
+    text: {
+      en: "That sounds ideal. Can you book a 30-minute private meeting with their export director on the opening day, 14th July around 11:30 AM?",
+      hi: "यह बिल्कुल सही है! क्या आप 14 जुलाई को सुबह 11:30 बजे उनके एक्सपोर्ट डायरेक्टर के साथ मेरी 30 मिनट की मीटिंग बुक कर सकती हैं?",
+      ja: "理想的ですね。開幕初日の7月14日午前11時30分頃に、輸出担当取締役との30分間の個別商談を予約できますか？",
+      de: "Das klingt ideal. Können Sie ein 30-minütiges Treffen mit dem Exportdirektor am Eröffnungstag, dem 14. Juli um 11:30 Uhr buchen?",
+      fr: "C'est parfait. Pouvez-vous réserver un rendez-vous de 30 minutes avec leur directeur export le jour de l'ouverture, le 14 juillet vers 11h30 ?",
+      es: "Suena perfecto. ¿Puedes reservar una reunión de 30 minutos con su director de exportación el día de apertura, 14 de julio a las 11:30?",
+      ar: "هذا ممتاز. هل يمكنك حجز اجتماع خاص لمدة 30 دقيقة مع مدير التصدير في يوم الافتتاح، 14 يوليو حوالي الساعة 11:30 صباحاً؟"
+    },
     toolAction: {
       toolType: "calendar",
       title: "Hall 2 B2B Schedule Engine",
@@ -118,14 +199,35 @@ const SOURCING_STEPS: DemoStep[] = [
   },
   {
     step: 4,
-    statusBadgeEn: "LOCKING REAL SLOT",
-    statusBadgeHi: "स्लॉट लॉकिंग",
     speaker: "Serali",
-    speakerLabelEn: "SERALI",
-    speakerLabelHi: "SERALI",
     speakerType: "agent",
-    textEn: "Certainly! I am locking the 11:30 AM private slot on Tuesday 14th July with Export Director Rajesh Kumar in Hall 2. Shall I confirm this for you?",
-    textHi: "बिल्कुल! मैं 14 जुलाई को सुबह 11:30 बजे एक्सपोर्ट डायरेक्टर राजेश कुमार के साथ हॉल 2 में आपका स्लॉट लॉक कर रही हूं। क्या मैं इसे कन्फर्म कर दूं?",
+    speakerLabels: {
+      en: "SERALI",
+      hi: "SERALI",
+      ja: "セラリ",
+      de: "SERALI",
+      fr: "SERALI",
+      es: "SERALI",
+      ar: "سيرالي"
+    },
+    statusBadges: {
+      en: "LOCKING REAL SLOT",
+      hi: "स्लॉट लॉकिंग",
+      ja: "スロット確保中",
+      de: "BUCHUNG LÄUFT",
+      fr: "VERROUILLAGE CRÉNEAU",
+      es: "BLOQUEANDO HORARIO",
+      ar: "جارٍ تثبيت الموعد"
+    },
+    text: {
+      en: "Certainly! I am locking the 11:30 AM private slot on Tuesday 14th July with Export Director Rajesh Kumar in Hall 2. Shall I confirm this for you?",
+      hi: "बिल्कुल! मैं 14 जुलाई को सुबह 11:30 बजे एक्सपोर्ट डायरेक्टर राजेश कुमार के साथ हॉल 2 में आपका स्लॉट लॉक कर रही हूं। क्या मैं इसे कन्फर्म कर दूं?",
+      ja: "承知いたしました！7月14日火曜日午前11時30分、ホール2でのラジェシュ・クマール取締役との商談枠を確保しています。確定してよろしいですか？",
+      de: "Natürlich! Ich reserviere den Termin am Dienstag, 14. Juli um 11:30 Uhr mit Exportdirektor Rajesh Kumar in Halle 2. Soll ich bestätigen?",
+      fr: "Certainement ! Je verrouille le créneau du mardi 14 juillet à 11h30 avec le directeur export Rajesh Kumar dans le Hall 2. Dois-je confirmer ?",
+      es: "¡Por supuesto! Estoy bloqueando la reunión privada del martes 14 de julio a las 11:30 con Rajesh Kumar en el Hall 2. ¿La confirmo?",
+      ar: "بالتأكيد! أقوم بتثبيت الموعد الخاص يوم الثلاثاء 14 يوليو الساعة 11:30 صباحاً مع مدير التصدير راجيش كومار. هل أؤكد ذلك لك؟"
+    },
     toolAction: {
       toolType: "calendar",
       title: "Hall 2 B2B Schedule Engine",
@@ -141,14 +243,35 @@ const SOURCING_STEPS: DemoStep[] = [
   },
   {
     step: 5,
-    statusBadgeEn: "MEETING CONFIRMED",
-    statusBadgeHi: "मीटिंग कन्फर्म",
     speaker: "Buyer",
-    speakerLabelEn: "BUYER",
-    speakerLabelHi: "BUYER",
     speakerType: "user",
-    textEn: "Yes please, confirm the slot and dispatch the VIP digital badge and booth coordinates.",
-    textHi: "हां कृपया कन्फर्म करें और मुझे डिजिटल बैज व लोकेशन भेज दीजिए।",
+    speakerLabels: {
+      en: "BUYER",
+      hi: "BUYER",
+      ja: "バイヤー",
+      de: "EINKÄUFER",
+      fr: "ACHETEUR",
+      es: "COMPRADOR",
+      ar: "المشتري"
+    },
+    statusBadges: {
+      en: "MEETING CONFIRMED",
+      hi: "मीटिंग कन्फर्म",
+      ja: "商談確定",
+      de: "TERMIN BESTÄTIGT",
+      fr: "RÉUNION CONFIRMÉE",
+      es: "REUNIÓN CONFIRMADA",
+      ar: "تم تأكيد الاجتماع"
+    },
+    text: {
+      en: "Yes please, confirm the slot and dispatch the VIP digital badge and booth coordinates.",
+      hi: "हां कृपया कन्फर्म करें और मुझे डिजिटल बैज व लोकेशन भेज दीजिए।",
+      ja: "はい、お願いします。枠を確定して、VIPデジタルバッジとブースの位置情報を送信してください。",
+      de: "Ja bitte, bestätigen Sie den Termin und senden Sie mir den digitalen VIP-Ausweis sowie die Standkoordinaten.",
+      fr: "Oui s'il vous plaît, confirmez le créneau et envoyez le badge numérique VIP et les coordonnées du stand.",
+      es: "Sí, por favor, confirma el horario y envía el pase digital VIP con la ubicación del stand.",
+      ar: "نعم من فضلك، أكد الموعد وأرسل الشارة الرقمية VIP وإحداثيات الجناح."
+    },
     toolAction: {
       toolType: "calendar",
       title: "Hall 2 B2B Schedule Engine",
@@ -164,14 +287,35 @@ const SOURCING_STEPS: DemoStep[] = [
   },
   {
     step: 6,
-    statusBadgeEn: "DISPATCHING WHATSAPP DOSSIER",
-    statusBadgeHi: "व्हाट्सएप व बैज भेजा गया",
     speaker: "Serali",
-    speakerLabelEn: "SERALI",
-    speakerLabelHi: "SERALI",
     speakerType: "agent",
-    textEn: "All set! Your B2B meeting is confirmed. I have dispatched ABC Textiles' SS27 product catalog, swatch specs, and Gate 4 VIP fast-track directions to your WhatsApp.",
-    textHi: "बहुत बढ़िया! आपकी मीटिंग कन्फर्म हो गई है। मैंने ABC टेक्सटाइल्स का कैटलॉग, स्वैच डिटेल्स और गेट 4 VIP रूट आपके WhatsApp पर भेज दिया है।",
+    speakerLabels: {
+      en: "SERALI",
+      hi: "SERALI",
+      ja: "セラリ",
+      de: "SERALI",
+      fr: "SERALI",
+      es: "SERALI",
+      ar: "سيرالي"
+    },
+    statusBadges: {
+      en: "DISPATCHING WHATSAPP DOSSIER",
+      hi: "व्हाट्सएप व बैज भेजा गया",
+      ja: "WhatsApp書類送信済み",
+      de: "WHATSAPP DOSSIER VERSENDET",
+      fr: "DOSSIER WHATSAPP ENVOYÉ",
+      es: "DOSSIER ENVIADO POR WHATSAPP",
+      ar: "تم إرسال الملف عبر واتساب"
+    },
+    text: {
+      en: "All set! Your B2B meeting is confirmed. I have dispatched ABC Textiles' SS27 product catalog, swatch specs, and Gate 4 VIP fast-track directions to your WhatsApp.",
+      hi: "बहुत बढ़िया! आपकी मीटिंग कन्फर्म हो गई है। मैंने ABC टेक्सटाइल्स का कैटलॉग, स्वैच डिटेल्स और गेट 4 VIP रूट आपके WhatsApp पर भेज दिया है।",
+      ja: "完了しました！商談が確定しました。ABCテキスタイルのSS27カタログ、スワッチ詳細、Gate 4 VIPファストトラック案内をWhatsAppにお送りしました。",
+      de: "Alles bereit! Ihr B2B-Treffen ist bestätigt. Ich habe den SS27-Katalog von ABC Textiles, Stoffmuster-Details und die VIP-Wegbeschreibung per WhatsApp gesendet.",
+      fr: "C'est prêt ! Votre réunion B2B est confirmée. J'ai envoyé le catalogue SS27 d'ABC Textiles, les détails d'échantillons et l'itinéraire VIP Porte 4 sur votre WhatsApp.",
+      es: "¡Listo! Tu reunión B2B está confirmada. He enviado el catálogo SS27 de ABC Textiles, especificaciones de muestras y acceso VIP por Puerta 4 a tu WhatsApp.",
+      ar: "كل شيء جاهز! تم تأكيد الاجتماع. لقد أرسلت كتالوج ABC Textiles لموسم SS27 وتفاصيل العينات ومسار VIP من البوابة 4 إلى تطبيق واتساب الخاص بك."
+    },
     toolAction: {
       toolType: "whatsapp",
       title: "IIGF WhatsApp VIP Gateway",
@@ -189,14 +333,35 @@ const SOURCING_STEPS: DemoStep[] = [
 const LOGISTICS_STEPS: DemoStep[] = [
   {
     step: 1,
-    statusBadgeEn: "CALLING IN",
-    statusBadgeHi: "कॉलिंग इन",
     speaker: "Buyer",
-    speakerLabelEn: "BUYER",
-    speakerLabelHi: "BUYER",
     speakerType: "user",
-    textEn: "Hello! My flight arrives at Delhi Airport Terminal 3 tomorrow at 8:15 AM. How do I access the official IIGF VIP limousine to The Taj Mahal Hotel?",
-    textHi: "नमस्ते! मेरी फ्लाइट कल सुबह 8:15 बजे दिल्ली एयरपोर्ट T3 पर आ रही है। ताज महल होटल के लिए IIGF VIP कार कैसे मिलेगी?",
+    speakerLabels: {
+      en: "BUYER",
+      hi: "BUYER",
+      ja: "バイヤー",
+      de: "EINKÄUFER",
+      fr: "ACHETEUR",
+      es: "COMPRADOR",
+      ar: "المشتري"
+    },
+    statusBadges: {
+      en: "CALLING IN",
+      hi: "कॉलिंग इन",
+      ja: "発信中",
+      de: "ANRUF",
+      fr: "APPEL EN COURS",
+      es: "LLAMANDO",
+      ar: "جارٍ الاتصال"
+    },
+    text: {
+      en: "Hello! My flight arrives at Delhi Airport Terminal 3 tomorrow at 8:15 AM. How do I access the official IIGF VIP limousine to The Taj Mahal Hotel?",
+      hi: "नमस्ते! मेरी फ्लाइट कल सुबह 8:15 बजे दिल्ली एयरपोर्ट T3 पर आ रही है। ताज महल होटल के लिए IIGF VIP कार कैसे मिलेगी?",
+      ja: "こんにちは！明日の朝8時15分にデリー空港T3に到着します。タージマハルホテル行きの公式IIGF VIP送迎車はどこで利用できますか？",
+      de: "Hallo! Mein Flug landet morgen um 8:15 Uhr am Flughafen Delhi T3. Wie erreiche ich die offizielle IIGF-VIP-Limousine zum The Taj Mahal Hotel?",
+      fr: "Bonjour ! Mon vol arrive demain à 8h15 à l'aéroport de Delhi T3. Comment accéder à la limousine VIP officielle de l'IIGF vers l'hôtel The Taj Mahal ?",
+      es: "¡Hola! Mi vuelo llega mañana a las 8:15 al aeropuerto de Delhi T3. ¿Cómo accedo a la limusina VIP oficial de IIGF hacia The Taj Mahal Hotel?",
+      ar: "مرحباً! ستصل رحلتي إلى مطار دلهي المبنى 3 غداً الساعة 8:15 صباحاً. كيف أصل إلى سيارة ليموزين IIGF VIP الرسمية إلى فندق تاج محل؟"
+    },
     toolAction: {
       toolType: "triage",
       title: "Overseas Buyer Hospitality Record",
@@ -211,14 +376,35 @@ const LOGISTICS_STEPS: DemoStep[] = [
   },
   {
     step: 2,
-    statusBadgeEn: "CONNECTED",
-    statusBadgeHi: "कनेक्टेड",
     speaker: "Serali",
-    speakerLabelEn: "SERALI",
-    speakerLabelHi: "SERALI",
     speakerType: "agent",
-    textEn: "Welcome Karan! Chauffeur Ramesh (+91 98110 55210) will be waiting at Terminal 3 Gate 5 with an IIGF VIP placard. Your express hotel check-in has been pre-cleared.",
-    textHi: "स्वागत है करण! T3 गेट 5 पर ड्राइवर रमेश (+91 98110 55210) IIGF प्लेकार्ड के साथ तैयार रहेंगे। आपके होटल का एक्सप्रेस चेक-इन एक्टिव कर दिया गया है।",
+    speakerLabels: {
+      en: "SERALI",
+      hi: "SERALI",
+      ja: "セラリ",
+      de: "SERALI",
+      fr: "SERALI",
+      es: "SERALI",
+      ar: "سيرالي"
+    },
+    statusBadges: {
+      en: "CONNECTED",
+      hi: "कनेक्टेड",
+      ja: "接続中",
+      de: "VERBUNDEN",
+      fr: "CONNECTÉ",
+      es: "CONECTADO",
+      ar: "متصل"
+    },
+    text: {
+      en: "Welcome Karan! Chauffeur Ramesh (+91 98110 55210) will be waiting at Terminal 3 Gate 5 with an IIGF VIP placard. Your express hotel check-in has been pre-cleared.",
+      hi: "स्वागत है करण! T3 गेट 5 पर ड्राइवर रमेश (+91 98110 55210) IIGF प्लेकार्ड के साथ तैयार रहेंगे। आपके होटल का एक्सप्रेस चेक-इन एक्टिव कर दिया गया है।",
+      ja: "ようこそカラン様！運転手のラメシュ（+91 98110 55210）がターミナル3ゲート5にてIIGF案内板を持ってお待ちしております。ホテルへの優先チェックインも完了しています。",
+      de: "Willkommen Karan! Chauffeur Ramesh (+91 98110 55210) wartet an Terminal 3 Gate 5 mit einem IIGF-Schild. Ihr Express-Hotel-Check-in ist bereits vorbereitet.",
+      fr: "Bienvenue Karan ! Le chauffeur Ramesh (+91 98110 55210) vous attendra au Terminal 3 Porte 5 avec une pancarte IIGF. Votre enregistrement à l'hôtel est pré-validé.",
+      es: "¡Bienvenido Karan! El chófer Ramesh (+91 98110 55210) te esperará en la Terminal 3 Puerta 5 con un cartel de IIGF. Tu check-in exprés en el hotel está listo.",
+      ar: "أهلاً بك كاران! السائق راميش (+91 98110 55210) سيكون في انتظارك عند البوابة 5 في المبنى 3 مع لوحة IIGF VIP. تم اعتماد تسجيل الوصول السريع في الفندق."
+    },
     toolAction: {
       toolType: "crm",
       title: "GPS Chauffeur Telemetry",
@@ -232,14 +418,35 @@ const LOGISTICS_STEPS: DemoStep[] = [
   },
   {
     step: 3,
-    statusBadgeEn: "DISPATCHING WHATSAPP",
-    statusBadgeHi: "व्हाट्सएप भेजा गया",
     speaker: "Serali",
-    speakerLabelEn: "SERALI",
-    speakerLabelHi: "SERALI",
     speakerType: "agent",
-    textEn: "Your RFID Smart Badge will be presented at hotel check-in, and the private electric coach departs every 20 minutes from the hotel porch to Bharat Mandapam Gate 4.",
-    textHi: "आपका RFID स्मार्ट बैज होटल चेक-इन पर मिल जाएगा, और भारत मंडपम गेट 4 के लिए हर 20 मिनट पर होटल से प्राइवेट इलेक्ट्रिक बस चलेगी।",
+    speakerLabels: {
+      en: "SERALI",
+      hi: "SERALI",
+      ja: "セラリ",
+      de: "SERALI",
+      fr: "SERALI",
+      es: "SERALI",
+      ar: "سيرالي"
+    },
+    statusBadges: {
+      en: "DISPATCHING WHATSAPP",
+      hi: "व्हाट्सएप भेजा गया",
+      ja: "WhatsApp送信完了",
+      de: "WHATSAPP VERSENDET",
+      fr: "WHATSAPP ENVOYÉ",
+      es: "WHATSAPP ENVIADO",
+      ar: "تم الإرسال عبر واتساب"
+    },
+    text: {
+      en: "Your RFID Smart Badge will be presented at hotel check-in, and the private electric coach departs every 20 minutes from the hotel porch to Bharat Mandapam Gate 4.",
+      hi: "आपका RFID स्मार्ट बैज होटल चेक-इन पर मिल जाएगा, और भारत मंडपम गेट 4 के लिए हर 20 मिनट पर होटल से प्राइवेट इलेक्ट्रिक बस चलेगी।",
+      ja: "RFIDスマートバッジはホテルチェックイン時にお渡しします。また、ホテル前からバーラト・マンダパムGate 4へ直行する専用EVバスが20分間隔で運行しています。",
+      de: "Ihr RFID-Smart-Badge wird Ihnen beim Hotel-Check-in überreicht, und der private Elektro-Shuttlebus fährt alle 20 Minuten direkt zum Bharat Mandapam Tor 4.",
+      fr: "Votre badge RFID vous sera remis à l'hôtel, et la navette électrique privée part toutes les 20 minutes du parvis de l'hôtel vers la Porte 4 de Bharat Mandapam.",
+      es: "Tu tarjeta RFID te será entregada en el check-in del hotel, y el autobús eléctrico privado sale cada 20 minutos hacia la Puerta 4 de Bharat Mandapam.",
+      ar: "سيتم تسليم شارة RFID الذكية الخاصة بك عند تسجيل الوصول، وتنطلق الحافلة الكهربائية الخاصة كل 20 دقيقة من الفندق إلى البوابة 4 في بهارات ماندابام."
+    },
     toolAction: {
       toolType: "whatsapp",
       title: "WhatsApp Logistics Dispatch",
@@ -257,14 +464,35 @@ const LOGISTICS_STEPS: DemoStep[] = [
 const TRANSLATION_STEPS: DemoStep[] = [
   {
     step: 1,
-    statusBadgeEn: "CALLING IN",
-    statusBadgeHi: "कॉलिंग इन",
     speaker: "Buyer",
-    speakerLabelEn: "BUYER",
-    speakerLabelHi: "BUYER",
     speakerType: "user",
-    textEn: "Konnichiwa! We want to order 800 hand-block vegetable dyed silk scarves. Can the artisan guarantee natural indigo fastness for Japanese standards?",
-    textHi: "नमस्ते! हम 800 हैंड-ब्लॉक नेचुरल डाइड सिल्क स्कार्फ ऑर्डर करना चाहते हैं। क्या यह जापानी स्टैंडर्ड्स के अनुसार कलर-फास्ट है?",
+    speakerLabels: {
+      en: "BUYER",
+      hi: "BUYER",
+      ja: "バイヤー",
+      de: "EINKÄUFER",
+      fr: "ACHETEUR",
+      es: "COMPRADOR",
+      ar: "المشتري"
+    },
+    statusBadges: {
+      en: "CALLING IN",
+      hi: "कॉलिंग इन",
+      ja: "発信中",
+      de: "ANRUF",
+      fr: "APPEL EN COURS",
+      es: "LLAMANDO",
+      ar: "جارٍ الاتصال"
+    },
+    text: {
+      en: "Konnichiwa! We want to order 800 hand-block vegetable dyed silk scarves. Can the artisan guarantee natural indigo fastness for Japanese standards?",
+      hi: "नमस्ते! हम 800 हैंड-ब्लॉक नेचुरल डाइड सिल्क स्कार्फ ऑर्डर करना चाहते हैं। क्या यह जापानी स्टैंडर्ड्स के अनुसार कलर-फास्ट है?",
+      ja: "こんにちは！草木染め・手捺染シルクスカーフを800枚発注したいのですが、日本のJIS規格に適合する天然藍染めの色落ち堅牢度を保証できますか？",
+      de: "Konnichiwa! Wir möchten 800 pflanzengefärbte Handblock-Seidenschals bestellen. Kann der Kunsthandwerker die Indigo-Echtheit nach japanischem Standard garantieren?",
+      fr: "Konnichiwa ! Nous souhaitons commander 800 foulards en soie imprimés au tampon végétal. L'artisan garantit-il la solidité de l'indigo selon les normes japonaises ?",
+      es: "¡Konnichiwa! Queremos pedir 800 bufandas de seda teñidas con tintes vegetales. ¿Puede el artesano garantizar la solidez del índigo según los estándares japoneses?",
+      ar: "كونيتشوا! نريد طلب 800 وشاح حريري مصبوغ يدوياً بألوان نباتية. هل يضمن الحرفي ثبات لون النيلة الطبيعية وفقاً للمعايير اليابانية؟"
+    },
     toolAction: {
       toolType: "triage",
       title: "Speech & Dialect Translation",
@@ -279,14 +507,35 @@ const TRANSLATION_STEPS: DemoStep[] = [
   },
   {
     step: 2,
-    statusBadgeEn: "CONNECTED",
-    statusBadgeHi: "कनेक्टेड",
     speaker: "Serali",
-    speakerLabelEn: "SERALI",
-    speakerLabelHi: "SERALI",
     speakerType: "agent",
-    textEn: "Master Weaver Ramkishan confirms that their Bagru natural indigo uses organic harda mordants meeting JIS Level 4 colorfastness. Lab dip swatches can be shipped via DHL today.",
-    textHi: "मास्टर बुनकर रामकिशन जी ने पुष्टि की है कि उनकी बगरू नेचुरल डाई जापानी JIS लेवल 4 मानकों को पूरा करती है। आज ही टेस्टेड स्वैच भेजे जा सकते हैं।",
+    speakerLabels: {
+      en: "SERALI",
+      hi: "SERALI",
+      ja: "セラリ",
+      de: "SERALI",
+      fr: "SERALI",
+      es: "SERALI",
+      ar: "سيرالي"
+    },
+    statusBadges: {
+      en: "CONNECTED",
+      hi: "कनेक्टेड",
+      ja: "接続中",
+      de: "VERBUNDEN",
+      fr: "CONNECTÉ",
+      es: "CONECTADO",
+      ar: "متصل"
+    },
+    text: {
+      en: "Master Weaver Ramkishan confirms that their Bagru natural indigo uses organic harda mordants meeting JIS Level 4 colorfastness. Lab dip swatches can be shipped via DHL today.",
+      hi: "मास्टर बुनकर रामकिशन जी ने पुष्टि की है कि उनकी बगरू नेचुरल डाई जापानी JIS लेवल 4 मानकों को पूरा करती है। आज ही टेस्टेड स्वैच भेजे जा सकते हैं।",
+      ja: "人間国宝の織物匠ラムキシャン氏より回答です。バグルー天然藍染めは有機ハルダ媒染を用い、JIS 4級以上の染色堅牢度を満たしています。本日中にDHLで検査用スワッチを発送可能です。",
+      de: "Meisterweber Ramkishan bestätigt, dass ihr Bagru-Naturindigo JIS-Stufe-4-Farbechtheit erfüllt. Labor-Farbmuster können heute per DHL versendet werden.",
+      fr: "Le maître tisserand Ramkishan confirme que leur indigo naturel de Bagru respecte la norme JIS niveau 4. Des échantillons de test peuvent être expédiés via DHL dès aujourd'hui.",
+      es: "El maestro tejedor Ramkishan confirma que su índigo natural de Bagru cumple con la solidez de color JIS Nivel 4. Se pueden enviar muestras certificadas por DHL hoy mismo.",
+      ar: "يؤكد كبير النساجين رامكيشان أن صبغة الباغرو النيلية الطبيعية تلبي معايير JIS اليابانية من المستوى 4 لثبات اللون. يمكن شحن عينات مخبرية عبر DHL اليوم."
+    },
     toolAction: {
       toolType: "crm",
       title: "Lab Dip & Courier Protocol",
@@ -300,14 +549,35 @@ const TRANSLATION_STEPS: DemoStep[] = [
   },
   {
     step: 3,
-    statusBadgeEn: "COMMERCIAL LOI DISPATCHED",
-    statusBadgeHi: "ऑर्डर लेटर व अनुबंध जारी",
     speaker: "Serali",
-    speakerLabelEn: "SERALI",
-    speakerLabelHi: "SERALI",
     speakerType: "agent",
-    textEn: "The bilingual Letter of Intent (LOI) with Tokyo FOB terms of $18.50 per piece has been generated and sent to both parties for digital signing.",
-    textHi: "टोक्यो FOB $18.50 प्रति पीस की दर से डिजिटल लेटर ऑफ इंटेंट (LOI) तैयार करके दोनों पक्षों को हस्ताक्षर हेतु भेज दिया गया है।",
+    speakerLabels: {
+      en: "SERALI",
+      hi: "SERALI",
+      ja: "セラリ",
+      de: "SERALI",
+      fr: "SERALI",
+      es: "SERALI",
+      ar: "سيرالي"
+    },
+    statusBadges: {
+      en: "COMMERCIAL LOI DISPATCHED",
+      hi: "ऑर्डर लेटर व अनुबंध जारी",
+      ja: "商業LOI発行済み",
+      de: "LOI-VERTRAG VERSENDET",
+      fr: "LETTRE D'INTENTION ÉMISE",
+      es: "CARTA DE INTENCIÓN EMITIDA",
+      ar: "تم إصدار خطاب النوايا التجاري"
+    },
+    text: {
+      en: "The bilingual Letter of Intent (LOI) with Tokyo FOB terms of $18.50 per piece has been generated and sent to both parties for digital signing.",
+      hi: "टोक्यो FOB $18.50 प्रति पीस की दर से डिजिटल लेटर ऑफ इंटेंट (LOI) तैयार करके दोनों पक्षों को हस्ताक्षर हेतु भेज दिया गया है।",
+      ja: "東京FOB単価18.50ドルの日英バイリンガル意向表明書（LOI）を作成し、双方の電子署名用に送信いたしました。",
+      de: "Die zweisprachige Absichtserklärung (LOI) mit Tokio-FOB-Konditionen von 18,50 $ pro Stück wurde erstellt und zur digitalen Signatur versandt.",
+      fr: "La lettre d'intention bilingue avec des conditions FOB Tokyo de 18,50 $ par pièce a été générée et transmise aux deux parties pour signature numérique.",
+      es: "La Carta de Intención bilingüe con términos FOB Tokio a $18.50 por pieza ha sido generada y enviada a ambas partes para firma digital.",
+      ar: "تم إنشاء خطاب النوايا التجاري ثنائي اللغة بسعر FOB طوكيو 18.50 دولار للقطعة الواحدة وإرساله للطرفين للتوقيع الرقمي."
+    },
     toolAction: {
       toolType: "whatsapp",
       title: "Bilingual Contract Gateway",
@@ -329,12 +599,13 @@ interface AiCallerModalProps {
 export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose }) => {
   const { isDark } = useTheme();
   const [scenarioKey, setScenarioKey] = useState<"sourcing" | "logistics" | "translation">("sourcing");
-  const [language, setLanguage] = useState<"en" | "hi">("en");
+  const [language, setLanguage] = useState<SupportedLanguage>("en");
   const [stepIndex, setStepIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeMode, setActiveMode] = useState<"simulation" | "live-voice">("simulation");
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [isFooterHovered, setIsFooterHovered] = useState(false);
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
 
   // Live Mic Voice Call state
   const [isCalling, setIsCalling] = useState(false);
@@ -366,8 +637,9 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
     : (isPlaying && currentStep.speakerType === "agent");
 
   // Dynamic texts based on active language
-  const activeMainText = language === "en" ? currentStep.textEn : currentStep.textHi;
-  const activeTranslationText = language === "en" ? currentStep.textHi : currentStep.textEn;
+  const activeMainText = currentStep.text[language] || currentStep.text.en;
+  const activeTranslationText = language === "en" ? currentStep.text.hi : currentStep.text.en;
+  const activeSpeakerLabel = currentStep.speakerLabels[language] || currentStep.speakerLabels.en;
 
   const handleSelectScenario = (key: "sourcing" | "logistics" | "translation") => {
     if (typeof window !== "undefined" && window.speechSynthesis) {
@@ -377,6 +649,29 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
     setStepIndex(0);
     setIsPlaying(false);
   };
+
+  // Voice library cache
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    const loadVoices = () => {
+      const v = window.speechSynthesis.getVoices();
+      if (v && v.length > 0) {
+        setAvailableVoices(v);
+      }
+    };
+
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = null;
+      }
+    };
+  }, []);
 
   // Safe Cleanup
   useEffect(() => {
@@ -401,37 +696,130 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
     };
   }, [isOpen, onClose]);
 
-  // Speech synthesis
-  const speakCurrentStep = useCallback((step: DemoStep, lang: "en" | "hi") => {
+  // Select the most natural, human-like neural voice available for each persona and language
+  const getHumanVoice = useCallback((voices: SpeechSynthesisVoice[], speakerType: "user" | "agent", lang: SupportedLanguage) => {
+    if (!voices || voices.length === 0) return null;
+
+    if (lang === "ja") {
+      // Japanese (Kyoko, Otoya, Nanami, Google 日本語)
+      return (
+        voices.find(v => v.lang && v.lang.startsWith("ja") && v.name.includes("Natural")) ||
+        voices.find(v => v.lang && v.lang.startsWith("ja") && (v.name.includes("Kyoko") || v.name.includes("Nanami") || v.name.includes("Google"))) ||
+        voices.find(v => v.lang && v.lang.startsWith("ja")) ||
+        voices[0]
+      );
+    } else if (lang === "de") {
+      // German (Katja, Stefan, Google Deutsch)
+      return (
+        voices.find(v => v.lang && v.lang.startsWith("de") && v.name.includes("Natural")) ||
+        voices.find(v => v.lang && v.lang.startsWith("de") && (v.name.includes("Katja") || v.name.includes("Google") || v.name.includes("Marlene"))) ||
+        voices.find(v => v.lang && v.lang.startsWith("de")) ||
+        voices[0]
+      );
+    } else if (lang === "fr") {
+      // French (Audrey, Thomas, Google Français)
+      return (
+        voices.find(v => v.lang && v.lang.startsWith("fr") && v.name.includes("Natural")) ||
+        voices.find(v => v.lang && v.lang.startsWith("fr") && (v.name.includes("Audrey") || v.name.includes("Thomas") || v.name.includes("Google"))) ||
+        voices.find(v => v.lang && v.lang.startsWith("fr")) ||
+        voices[0]
+      );
+    } else if (lang === "es") {
+      // Spanish (Monica, Jorge, Google Español)
+      return (
+        voices.find(v => v.lang && v.lang.startsWith("es") && v.name.includes("Natural")) ||
+        voices.find(v => v.lang && v.lang.startsWith("es") && (v.name.includes("Monica") || v.name.includes("Google") || v.name.includes("Jorge"))) ||
+        voices.find(v => v.lang && v.lang.startsWith("es")) ||
+        voices[0]
+      );
+    } else if (lang === "ar") {
+      // Arabic (Laila, Maged, Google العربية)
+      return (
+        voices.find(v => v.lang && v.lang.startsWith("ar") && v.name.includes("Natural")) ||
+        voices.find(v => v.lang && v.lang.startsWith("ar") && (v.name.includes("Laila") || v.name.includes("Maged") || v.name.includes("Google"))) ||
+        voices.find(v => v.lang && v.lang.startsWith("ar")) ||
+        voices[0]
+      );
+    } else if (lang === "hi") {
+      if (speakerType === "agent") {
+        return (
+          voices.find(v => v.name.includes("Natural") && (v.lang.startsWith("hi") || v.lang === "en-IN")) ||
+          voices.find(v => v.name.includes("Swara") || v.name.includes("Neerja") || v.name.includes("Google हिन्दी")) ||
+          voices.find(v => v.lang.startsWith("hi")) ||
+          voices.find(v => v.lang === "en-IN") ||
+          voices[0]
+        );
+      } else {
+        return (
+          voices.find(v => v.name.includes("Madhur") || v.name.includes("Prabhat") || v.name.includes("Hemant")) ||
+          voices.find(v => v.lang.startsWith("hi")) ||
+          voices.find(v => v.lang === "en-IN") ||
+          voices[0]
+        );
+      }
+    } else {
+      if (speakerType === "agent") {
+        return (
+          voices.find(v => v.name.includes("Natural") && (v.lang === "en-IN" || v.name.includes("India"))) ||
+          voices.find(v => v.name.includes("Neerja") || v.name.includes("Heera") || v.name.includes("Google Indian English")) ||
+          voices.find(v => v.lang === "en-IN") ||
+          voices.find(v => v.name.includes("Natural") && v.lang.startsWith("en")) ||
+          voices.find(v => v.name.includes("Google") && (v.lang.startsWith("en-GB") || v.lang.startsWith("en-US"))) ||
+          voices.find(v => v.lang.startsWith("en")) ||
+          voices[0]
+        );
+      } else {
+        return (
+          voices.find(v => v.name.includes("Natural") && (v.lang === "en-GB" || v.name.includes("Libby") || v.name.includes("Sonia") || v.name.includes("Aria") || v.name.includes("Jenny"))) ||
+          voices.find(v => v.name.includes("Google UK English Female") || v.name.includes("Google US English") || v.name.includes("Samantha") || v.name.includes("Victoria") || v.name.includes("Karen")) ||
+          voices.find(v => v.lang === "en-GB") ||
+          voices.find(v => v.lang === "en-US") ||
+          voices.find(v => v.lang.startsWith("en")) ||
+          voices[0]
+        );
+      }
+    }
+  }, []);
+
+  // Speech synthesis with human prosody and cadence
+  const speakCurrentStep = useCallback((step: DemoStep, lang: SupportedLanguage) => {
     if (typeof window === "undefined" || !window.speechSynthesis || isAudioMuted) return;
 
     try {
       window.speechSynthesis.cancel();
       window.speechSynthesis.resume();
 
-      const textToSpeak = lang === "en" ? step.textEn : step.textHi;
+      const textToSpeak = step.text[lang] || step.text.en;
       const utter = new SpeechSynthesisUtterance(textToSpeak);
       currentUtterRef.current = utter;
 
-      const voices = window.speechSynthesis.getVoices();
+      const voices = availableVoices.length > 0 ? availableVoices : window.speechSynthesis.getVoices();
       const isAgent = step.speakerType === "agent";
 
-      if (lang === "hi") {
-        const hiVoice = voices.find(v => v.lang && v.lang.startsWith("hi")) ||
-          voices.find(v => v.lang === "en-IN") ||
-          voices.find(v => v.name && (v.name.includes("India") || v.name.includes("Hindi")));
-        if (hiVoice) utter.voice = hiVoice;
-        utter.lang = "hi-IN";
-        utter.rate = isAgent ? 1.0 : 0.95;
-        utter.pitch = isAgent ? 1.05 : 0.95;
+      const selectedVoice = getHumanVoice(voices, step.speakerType, lang);
+      if (selectedVoice) {
+        utter.voice = selectedVoice;
+        utter.lang = selectedVoice.lang;
       } else {
-        const enVoice = voices.find(v => v.lang === "en-GB" || v.lang === "en-IN") ||
-          voices.find(v => v.lang && v.lang.startsWith("en"));
-        if (enVoice) utter.voice = enVoice;
-        utter.lang = "en-US";
-        utter.rate = 1.0;
-        utter.pitch = isAgent ? 1.05 : 0.95;
+        const langObj = IIGF_LANGUAGES.find(l => l.code === lang);
+        utter.lang = langObj ? langObj.bcp47 : "en-US";
       }
+
+      if (lang === "ja") {
+        utter.rate = 1.0;
+        utter.pitch = isAgent ? 1.08 : 1.0;
+      } else if (lang === "de" || lang === "fr" || lang === "es") {
+        utter.rate = 0.98;
+        utter.pitch = isAgent ? 1.06 : 1.0;
+      } else if (lang === "hi") {
+        utter.rate = isAgent ? 0.96 : 0.98;
+        utter.pitch = isAgent ? 1.08 : 0.98;
+      } else {
+        utter.rate = isAgent ? 0.98 : 1.02;
+        utter.pitch = isAgent ? 1.08 : 1.02;
+      }
+
+      utter.volume = 1.0;
 
       utter.onend = () => {
         if (playbackTimerRef.current) clearTimeout(playbackTimerRef.current);
@@ -444,14 +832,14 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
               return prev;
             }
           });
-        }, 800);
+        }, 900);
       };
 
       utter.onerror = () => {};
 
       window.speechSynthesis.speak(utter);
     } catch {}
-  }, [isAudioMuted, steps.length]);
+  }, [isAudioMuted, availableVoices, getHumanVoice, steps.length]);
 
   // Play loop
   useEffect(() => {
@@ -467,8 +855,8 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
 
     speakCurrentStep(currentStep, language);
 
-    const text = language === "en" ? currentStep.textEn : currentStep.textHi;
-    const fallbackDuration = Math.max(4500, (text.length / 12) * 1000 + 2000);
+    const text = currentStep.text[language] || currentStep.text.en;
+    const fallbackDuration = Math.max(4500, (text.length / 10) * 1000 + 2000);
 
     const safetyTimer = setTimeout(() => {
       setStepIndex(prev => {
@@ -510,7 +898,8 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
           const recognition = new SpeechRecognition();
           recognition.continuous = true;
           recognition.interimResults = true;
-          recognition.lang = language === "hi" ? "hi-IN" : "en-US";
+          const langObj = IIGF_LANGUAGES.find(l => l.code === language);
+          recognition.lang = langObj ? langObj.bcp47 : "en-US";
 
           recognition.onstart = () => {
             setIsUserSpeakingLive(true);
@@ -537,7 +926,17 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
               if (typeof window !== "undefined" && window.speechSynthesis && !isAudioMuted) {
                 try {
                   const utter = new SpeechSynthesisUtterance(reply);
-                  utter.lang = language === "hi" ? "hi-IN" : "en-US";
+                  const voices = availableVoices.length > 0 ? availableVoices : window.speechSynthesis.getVoices();
+                  const agentVoice = getHumanVoice(voices, "agent", language);
+                  if (agentVoice) {
+                    utter.voice = agentVoice;
+                    utter.lang = agentVoice.lang;
+                  } else {
+                    const langObj = IIGF_LANGUAGES.find(l => l.code === language);
+                    utter.lang = langObj ? langObj.bcp47 : "en-US";
+                  }
+                  utter.rate = 0.98;
+                  utter.pitch = 1.08;
                   utter.onend = () => setIsAgentSpeakingLive(false);
                   window.speechSynthesis.speak(utter);
                 } catch {
@@ -578,6 +977,8 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
       }
     }
   };
+
+  const selectedLangObj = IIGF_LANGUAGES.find(l => l.code === language) || IIGF_LANGUAGES[0];
 
   if (!isOpen) return null;
 
@@ -646,7 +1047,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
           </div>
         </div>
 
-        {/* Center: Scenario Switcher + Bilingual Switcher + Mode */}
+        {/* Center: Scenario Switcher + Multilingual Delegation Picker + Mode */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
           {/* Scenarios */}
           <div
@@ -692,55 +1093,85 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
             })}
           </div>
 
-          {/* Bilingual Switcher (English / Hindi) */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              background: "rgba(255, 255, 255, 0.04)",
-              padding: 3,
-              borderRadius: 10,
-              border: "1px solid rgba(223, 183, 74, 0.3)",
-            }}
-          >
+          {/* ── MULTILINGUAL DELEGATION LANGUAGE PICKER (7 IIGF LANGUAGES) ── */}
+          <div style={{ position: "relative" }}>
             <button
-              onClick={() => {
-                setLanguage("en");
-                if (isPlaying) speakCurrentStep(currentStep, "en");
-              }}
+              onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
               style={{
-                padding: "6px 10px",
-                borderRadius: 8,
-                border: "none",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "6px 12px",
+                borderRadius: 10,
+                border: "1px solid rgba(223, 183, 74, 0.4)",
+                background: "rgba(223, 183, 74, 0.12)",
+                color: "#DFB74A",
                 cursor: "pointer",
                 fontSize: 11,
                 fontWeight: 700,
-                background: language === "en" ? "#DFB74A" : "transparent",
-                color: language === "en" ? "#07090D" : "#94A3B8",
                 transition: "all 0.2s ease",
               }}
             >
-              🇬🇧 English
+              <Globe size={13} color="#DFB74A" />
+              <span>{selectedLangObj.flag} {selectedLangObj.label}</span>
+              <span style={{ fontSize: 9, opacity: 0.7 }}>▼</span>
             </button>
-            <button
-              onClick={() => {
-                setLanguage("hi");
-                if (isPlaying) speakCurrentStep(currentStep, "hi");
-              }}
-              style={{
-                padding: "6px 10px",
-                borderRadius: 8,
-                border: "none",
-                cursor: "pointer",
-                fontSize: 11,
-                fontWeight: 700,
-                background: language === "hi" ? "#DFB74A" : "transparent",
-                color: language === "hi" ? "#07090D" : "#94A3B8",
-                transition: "all 0.2s ease",
-              }}
-            >
-              🇮🇳 हिंदी
-            </button>
+
+            {/* Dropdown Menu */}
+            {isLangDropdownOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  marginTop: 6,
+                  background: "#0D1117",
+                  border: "1px solid rgba(223, 183, 74, 0.3)",
+                  borderRadius: 12,
+                  padding: 4,
+                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.8)",
+                  zIndex: 100,
+                  width: 220,
+                  backdropFilter: "blur(16px)",
+                }}
+              >
+                <div style={{ padding: "6px 8px 4px", fontSize: 9, fontWeight: 800, color: "#94A3B8", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                  Official IIGF Delegation Languages
+                </div>
+                {IIGF_LANGUAGES.map(langItem => (
+                  <button
+                    key={langItem.code}
+                    onClick={() => {
+                      setLanguage(langItem.code);
+                      setIsLangDropdownOpen(false);
+                      if (isPlaying) speakCurrentStep(currentStep, langItem.code);
+                    }}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "7px 10px",
+                      borderRadius: 8,
+                      border: "none",
+                      cursor: "pointer",
+                      background: language === langItem.code ? "rgba(223, 183, 74, 0.2)" : "transparent",
+                      color: language === langItem.code ? "#DFB74A" : "#CBD5E1",
+                      textAlign: "left",
+                      fontSize: 11,
+                      fontWeight: language === langItem.code ? 700 : 500,
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span>{langItem.flag}</span>
+                      <span>{langItem.label}</span>
+                    </div>
+                    <span style={{ fontSize: 9, color: "#64748B" }}>{langItem.region.split(' ')[0]}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Mode Switcher */}
@@ -841,6 +1272,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
 
       {/* ── MAIN STAGE: EXACT MATCH OF THE ATTACHED PHOTO ── */}
       <main
+        onClick={() => setIsLangDropdownOpen(false)}
         style={{
           flex: 1,
           position: "relative",
@@ -902,7 +1334,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   fontFamily: "'Outfit', 'Montserrat', sans-serif",
                 }}
               >
-                BUYER
+                {currentStep.speakerLabels[language] || "BUYER"}
               </div>
               <div
                 style={{
@@ -914,7 +1346,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   marginTop: 4,
                 }}
               >
-                {isUserSpeaking ? "SPEAKING..." : "CALLING IN"}
+                {isUserSpeaking ? "SPEAKING..." : currentStep.statusBadges[language] || "CALLING IN"}
               </div>
             </div>
           </div>
@@ -1030,7 +1462,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
                   fontFamily: "'Outfit', 'Montserrat', sans-serif",
                 }}
               >
-                SERALI
+                {currentStep.speakerLabels[language] === "BUYER" ? "SERALI" : (currentStep.speakerLabels[language] || "SERALI")}
               </div>
               <div
                 style={{
@@ -1225,7 +1657,7 @@ export const AiCallerModal: React.FC<AiCallerModalProps> = ({ isOpen, onClose })
               marginBottom: 8,
             }}
           >
-            {currentStep.speakerLabelEn}
+            {activeSpeakerLabel}
           </div>
 
           {/* Primary Transcript Text */}
